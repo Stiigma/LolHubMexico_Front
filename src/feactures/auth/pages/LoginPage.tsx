@@ -5,6 +5,8 @@ import AuthInput from '../components/AuthInput';
 import AuthButton from '../components/AuthButton';
 import { loginUser } from '../services/authService';
 import type { LoginUserDTO } from '../types/LoginUserDTO';
+import type { UserDTO } from '../../../shared/types/User/UserDTO';
+import { useUser } from "../../../context/UserContext"
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -12,6 +14,8 @@ const LoginPage: React.FC = () => {
   const [credencial, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  const { setUser } = useUser();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,8 +30,19 @@ const LoginPage: React.FC = () => {
       console.log(result.user);
       // Puedes guardar token o usuario en localStorage si aplica
       localStorage.setItem('token', result.token);
+      localStorage.setItem("user", JSON.stringify(result.user));
 
-      navigate('/home');
+      const user: UserDTO = {
+        idUser: result.user.idUser,
+        userName: result.user.userName,
+        email: result.user.email,
+        role: result.user.role,
+        token: result.token,
+      };
+      console.log(user);
+      setUser(user);
+      console.log("Hizo set usuario");
+      navigate('/teams/preview');
     } catch (err: any) {
       try {
         const jsonError = JSON.parse(err.message); // si err.message es JSON string
