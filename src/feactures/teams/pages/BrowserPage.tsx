@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { teams, type Team } from '../../../shared/data/teams'; // ajusta ruta/alias
+=======
+>>>>>>> fb59d69f7e6d96387502cb56ce9d94b6aa9761d0
 
 export default function BrowserPage() {
   return (

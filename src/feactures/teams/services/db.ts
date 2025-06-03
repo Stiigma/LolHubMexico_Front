@@ -1,10 +1,8 @@
-import world from "../../../assets/worlds.png";
-
 const teams = [
   {
     IdTeam: 1,
     TeamName: "Dragons Reign",
-    TeamLogo: world,
+    TeamLogo: "/assets/dragon.jpg",
     CreationDate: "2023-01-15T14:30:00",
     IdCapitan: 101,
     Status: 1,
@@ -13,7 +11,7 @@ const teams = [
   {
     IdTeam: 2,
     TeamName: "Midlane Masters",
-    TeamLogo: world,
+    TeamLogo: "/assets/worlds.png",
     CreationDate: "2022-11-20T18:45:00",
     IdCapitan: 102,
     Status: 1,
@@ -22,7 +20,7 @@ const teams = [
   {
     IdTeam: 3,
     TeamName: "BotLane Brawlers",
-    TeamLogo: world,
+    TeamLogo: "/assets/worlds.png",
     CreationDate: "2024-02-10T09:20:00",
     IdCapitan: 103,
     Status: 1,
@@ -31,7 +29,7 @@ const teams = [
   {
     IdTeam: 4,
     TeamName: "Jungle Control",
-    TeamLogo: world,
+    TeamLogo: "/assets/worlds.png",
     CreationDate: "2023-05-05T12:10:00",
     IdCapitan: 104,
     Status: 1,
@@ -40,7 +38,7 @@ const teams = [
   {
     IdTeam: 5,
     TeamName: "Team Eclipse",
-    TeamLogo: world,
+    TeamLogo: "/assets/worlds.png",
     CreationDate: "2023-08-01T17:00:00",
     IdCapitan: 105,
     Status: 1,
@@ -49,7 +47,7 @@ const teams = [
   {
     IdTeam: 6,
     TeamName: "Support Kings",
-    TeamLogo:world,
+    TeamLogo: "/assets/worlds.png",
     CreationDate: "2022-12-12T13:00:00",
     IdCapitan: 106,
     Status: 1,
@@ -58,7 +56,7 @@ const teams = [
   {
     IdTeam: 7,
     TeamName: "Baron Hunters",
-    TeamLogo:world,
+    TeamLogo: "/assets/worlds.png",
     CreationDate: "2024-01-01T15:15:00",
     IdCapitan: 107,
     Status: 1,
@@ -67,7 +65,7 @@ const teams = [
   {
     IdTeam: 8,
     TeamName: "LoL Rebels",
-    TeamLogo:world,
+    TeamLogo: "/assets/worlds.png",
     CreationDate: "2023-03-03T10:30:00",
     IdCapitan: 108,
     Status: 0,
@@ -76,7 +74,7 @@ const teams = [
   {
     IdTeam: 9,
     TeamName: "Voidwalkers",
-    TeamLogo: world,
+    TeamLogo: "/assets/worlds.png",
     CreationDate: "2024-04-12T16:00:00",
     IdCapitan: 109,
     Status: 1,
@@ -85,7 +83,7 @@ const teams = [
   {
     IdTeam: 10,
     TeamName: "Elite 5",
-    TeamLogo: world,
+    TeamLogo: "/assets/worlds.png",
     CreationDate: "2023-07-22T19:45:00",
     IdCapitan: 110,
     Status: 1,

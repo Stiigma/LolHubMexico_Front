@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthLayout from '../components/AuthLayout';
 import AuthInput from '../components/AuthInput';
 import AuthButton from '../components/AuthButton';
 import { loginUser } from '../services/authService';
 import type { LoginUserDTO } from '../types/LoginUserDTO';
 import type { UserDTO } from '../../../shared/types/User/UserDTO';
-import { useUser } from "../../../context/UserContext"
+import { useUser } from '../../../context/UserContext';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -24,13 +23,12 @@ const LoginPage: React.FC = () => {
     try {
       const credencials: LoginUserDTO = {
         credencial,
-        password
-      }
+        password,
+      };
+
       const result = await loginUser(credencials);
-      console.log(result.user);
-      // Puedes guardar token o usuario en localStorage si aplica
       localStorage.setItem('token', result.token);
-      localStorage.setItem("user", JSON.stringify(result.user));
+      localStorage.setItem('user', JSON.stringify(result.user));
 
       const user: UserDTO = {
         idUser: result.user.idUser,
@@ -39,61 +37,75 @@ const LoginPage: React.FC = () => {
         role: result.user.role,
         token: result.token,
       };
-      console.log(user);
+
       setUser(user);
-      console.log("Hizo set usuario");
-      navigate('/teams/preview');
-    } catch (err: any) {
-      try {
-        const jsonError = JSON.parse(err.message); // si err.message es JSON string
-        setError(jsonError.message || 'Error al iniciar sesión');
-      } catch {
-        setError(err.message || 'Error al iniciar sesión');
+      navigate('/dashboard');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        try {
+          const jsonError = JSON.parse(err.message);
+          setError(jsonError.message || 'Error al iniciar sesión');
+        } catch {
+          setError(err.message || 'Error al iniciar sesión');
+        }
+      } else {
+        setError('Error desconocido');
       }
     }
   };
 
   return (
-    <AuthLayout title="Inicia sesión">
-      <form onSubmit={handleLogin} className="w-full">
-        <AuthInput
-          type="email"
-          placeholder="Correo electrónico"
-          value={credencial}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <AuthInput
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-900 to-gray-900 px-4">
+      <img src="/assets/logo.png" alt="Logo" className="w-24 h-24 mb-6" />
+      <div className="bg-blue-950 p-8 rounded-xl shadow-2xl w-full max-w-md">
+        <h2 className="text-white text-2xl font-bold text-center mb-6">Inicia sesión</h2>
 
-        {error && <p className="text-red-500 text-sm text-center mb-2">{error}</p>}
+        <form onSubmit={handleLogin} className="space-y-4">
+          <AuthInput
+            type="email"
+            placeholder="Correo electrónico"
+            value={credencial}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <AuthInput
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
-        <AuthButton>Iniciar sesión</AuthButton>
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
-        <p className="text-sm mt-4 text-center">
-          <a href="#" className="text-gray-300 hover:underline">¿Olvidaste tu contraseña?</a>
-        </p>
+          <AuthButton>Iniciar sesión</AuthButton>
 
-        <p className="text-sm mt-2 text-center">
-          ¿No tienes cuenta?{" "}
-          <span
-            onClick={() => navigate("/register")}
-            className="text-white font-bold cursor-pointer hover:underline"
+          <p className="text-sm text-center text-gray-300">
+            <a href="#" className="hover:underline">¿Olvidaste tu contraseña?</a>
+          </p>
+
+          <p className="text-sm text-center text-gray-300">
+            ¿No tienes cuenta?{' '}
+            <span
+              onClick={() => navigate('/register')}
+              className="text-white font-bold cursor-pointer hover:underline"
+            >
+              Crea una aquí
+            </span>
+          </p>
+
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="w-full mt-4 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 rounded"
           >
-            Crea una aquí
-          </span>
-        </p>
+            Volver al Inicio
+          </button>
+        </form>
+      </div>
 
-        <AuthButton onClick={() => navigate("/")} type="button" className="bg-blue-800 mt-4">
-          Volver al Inicio
-        </AuthButton>
-      </form>
-    </AuthLayout>
+      <p className="text-gray-400 mt-8 text-sm">© Company Yuppi</p>
+    </div>
   );
 };
 

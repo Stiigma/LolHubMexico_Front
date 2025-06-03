@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from '../../assets/logo.png'; // Ajusta la ruta si es diferente
 
 const Footer: React.FC = () => {
   return (
@@ -7,7 +6,7 @@ const Footer: React.FC = () => {
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
         {/* Logo y marca */}
         <div className="flex items-center gap-2">
-          <img src={logo} alt="Yuppi Logo" className="h-6 w-auto" />
+          <img src="/assets/logo.png" alt="Yuppi Logo" className="h-6 w-auto" />
           <span className="text-sm font-medium text-white">Yuppi LeagueHub © {new Date().getFullYear()}</span>
         </div>
 
@@ -23,3 +22,4 @@ const Footer: React.FC = () => {
 };
 
 export default Footer;
+

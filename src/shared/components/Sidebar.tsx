@@ -1,7 +1,18 @@
 import React from "react";
-import { FiSearch, FiUsers, FiPlay, FiTrendingUp, FiEye, FiGrid, FiPlus } from "react-icons/fi";
-import { IoCloudOutline, IoCartOutline, IoRocketOutline } from "react-icons/io5";
-import logo from '../../assets/logo.png';
+import {
+  FiSearch,
+  FiUsers,
+  FiPlay,
+  FiTrendingUp,
+  FiEye,
+  FiGrid,
+  FiPlus
+} from "react-icons/fi";
+import {
+  IoCloudOutline,
+  IoCartOutline,
+  IoRocketOutline
+} from "react-icons/io5";
 
 const Sidebar = () => {
   return (
@@ -10,8 +21,8 @@ const Sidebar = () => {
       <div className="space-y-4">
         {/* Logo */}
         <div className="flex items-center space-x-2 mb-6">
-          <img src={logo} alt="Logo" className="h-17 w-17" />
-          <span className="font-bold text-lg ">LHM</span>
+          <img src="/logo.png" alt="Logo" className="h-17 w-17" />
+          <span className="font-bold text-lg">LHM</span>
         </div>
 
         <nav className="space-y-2">
