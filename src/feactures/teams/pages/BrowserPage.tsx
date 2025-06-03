@@ -1,4 +1,3 @@
-import React from "react";
 
 import teams from "../services/db";
 

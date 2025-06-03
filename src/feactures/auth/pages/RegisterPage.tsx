@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthLayout from '../components/AuthLayout';
 import AuthInput from '../components/AuthInput';
 import AuthButton from '../components/AuthButton';
 import { registerUser } from '../services/authService';
@@ -9,7 +8,6 @@ import type { CreateUserDTO } from '../types/CreateUserDTO';
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
 
-  // Estados para los campos del formulario
   const [FullName, setFullName] = useState('');
   const [UserName, setUserName] = useState('');
   const [Email, setEmail] = useState('');
@@ -41,86 +39,103 @@ const RegisterPage: React.FC = () => {
     try {
       await registerUser(newUser);
       navigate('/login');
-    } catch (err: any) {
-      setError(err.message || 'Error al registrar');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || 'Error al registrar');
+      } else {
+        setError('Error desconocido al registrar');
+      }
     }
   };
 
   return (
-    <AuthLayout title="Crea tu cuenta">
-      <form onSubmit={handleRegister} className="w-full">
-        <AuthInput
-          type="text"
-          placeholder="Nombre completo"
-          value={FullName}
-          onChange={(e) => setFullName(e.target.value)}
-          required
-        />
-        <AuthInput
-          type="text"
-          placeholder="Nombre de usuario"
-          value={UserName}
-          onChange={(e) => setUserName(e.target.value)}
-          required
-        />
-        <AuthInput
-          type="email"
-          placeholder="Correo electrónico"
-          value={Email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <AuthInput
-          type="tel"
-          placeholder="Número de teléfono (+52...)"
-          pattern="^\+52\d{10}$"
-          value={PhoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          required
-        />
-        <AuthInput
-          type="password"
-          placeholder="Contraseña"
-          value={PasswordHash}
-          onChange={(e) => setPasswordHash(e.target.value)}
-          required
-        />
-        <AuthInput
-          type="password"
-          placeholder="Confirmar contraseña"
-          value={ConfirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-900 to-gray-900 px-4 text-white">
+      {/* Logo */}
+      <img src="/assets/logo.png" alt="Logo" className="w-24 h-24 mb-6" />
 
-        <AuthInput
-          type="Nacionalidad"
-          placeholder="Confirmar nacionalidad"
-          value={Nacionality}
-          onChange={(e) => setNacionality(e.target.value)}
-          required
-        />
+      {/* Card */}
+      <div className="bg-blue-950 p-8 rounded-xl shadow-2xl w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center mb-6">Crea tu cuenta</h2>
 
-        {/* Mensaje de error */}
-        {error && <p className="text-red-500 text-sm text-center mb-2">{error}</p>}
+        <form onSubmit={handleRegister} className="space-y-4">
+          <AuthInput
+            type="text"
+            placeholder="Nombre completo"
+            value={FullName}
+            onChange={(e) => setFullName(e.target.value)}
+            required
+          />
+          <AuthInput
+            type="text"
+            placeholder="Nombre de usuario"
+            value={UserName}
+            onChange={(e) => setUserName(e.target.value)}
+            required
+          />
+          <AuthInput
+            type="email"
+            placeholder="Correo electrónico"
+            value={Email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <AuthInput
+            type="tel"
+            placeholder="Número de teléfono (+52...)"
+            pattern="^\\+52\\d{10}$"
+            value={PhoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            required
+          />
+          <AuthInput
+            type="password"
+            placeholder="Contraseña"
+            value={PasswordHash}
+            onChange={(e) => setPasswordHash(e.target.value)}
+            required
+          />
+          <AuthInput
+            type="password"
+            placeholder="Confirmar contraseña"
+            value={ConfirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+          <AuthInput
+            type="text"
+            placeholder="Nacionalidad"
+            value={Nacionality}
+            onChange={(e) => setNacionality(e.target.value)}
+            required
+          />
 
-        <AuthButton>Registrarse</AuthButton>
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
-        <p className="text-sm mt-2 text-center">
-          ¿Ya tienes cuenta?{" "}
-          <span
-            onClick={() => navigate("/login")}
-            className="text-white font-bold cursor-pointer hover:underline"
+          <AuthButton>Registrarse</AuthButton>
+
+          <p className="text-sm text-center text-gray-300">
+            ¿Ya tienes cuenta?{' '}
+            <span
+              onClick={() => navigate('/login')}
+              className="text-white font-bold cursor-pointer hover:underline"
+            >
+              Inicia sesión
+            </span>
+          </p>
+
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="w-full mt-4 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 rounded"
           >
-            Inicia sesión aquí
-          </span>
-        </p>
+            Volver al Inicio
+          </button>
+        </form>
+      </div>
 
-        <AuthButton onClick={() => navigate("/")} type="button" className="bg-blue-800 mt-4">
-          Volver al Inicio
-        </AuthButton>
-      </form>
-    </AuthLayout>
+      {/* Footer */}
+      <p className="text-gray-400 mt-8 text-sm">© Company Yuppi</p>
+    </div>
   );
 };
 
