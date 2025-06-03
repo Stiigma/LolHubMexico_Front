@@ -24,13 +24,9 @@ export default function BrowserPage() {
 
       {/* GRID (auto-fill) */}
       {/* BrowserPage.tsx – sección GRID final */}
-      <section className="px-4 py-16">
+      <section className="px-4 py-8">
         <div
-          className="
-            grid w-full justify-center            /* centra el bloque completo */
-            grid-cols-[repeat(auto-fill,minmax(220px,1fr))]
-            gap-10
-          "
+          className="-mt-6 grid w-full justify-center grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-25"
         >
           {teams.map((team) => (
             <TeamCard key={team.id} team={team} />

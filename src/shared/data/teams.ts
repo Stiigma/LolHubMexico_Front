@@ -3,6 +3,7 @@ export type Team = {
   id: number;
   name: string;
   logo: string;
+  banner: string;
   description: string;
   createdAT: string;
   stats: { games: number; wins: number; losses: number; draws: number };
@@ -14,7 +15,8 @@ export const teams: Team[] = [
   {
     id: 1,
     name: 'Dark Passage',
-    logo: '/assets/teams/team1.png',
+    logo: new URL('../../assets/teamsassets/team1.png', import.meta.url).href,
+    banner: new URL('../../assets/teamassets/banner.png', import.meta.url).href,
     description:
       'Enim et faucibus maximus, nulla massa finibus arcu, ornare euismod…',
     createdAT: '12-12-2024',
@@ -25,15 +27,17 @@ export const teams: Team[] = [
       { name: 'chat', url: '#' },
     ],
     players: [
-      { id: 1, name: 'Shadow', role: 'Top', avatar: '/assets/teams/team1.png' },
-      { id: 2, name: 'Viper', role: 'Jungle', avatar: '/assets/teams/team1.png' },
+      { id: 1, name: 'Stiigma', role: 'Top', avatar: '../../assets/teamsassets/team1.png' },
+      { id: 2, name: 'Flaeyy', role: 'Jungle', avatar: '../../assets/teamsassets/team1.png' },
+      { id: 3, name: 'Zonet', role: 'Mid', avatar: '../../assets/teamsassets/team1.png' },
       // …
     ],
   },
   {
     id: 2,
     name: 'Force of Nature',
-    logo: '/assets/teams/team2.png',
+    logo: new URL('../../assets/teamsassets/team1.png', import.meta.url).href,
+    banner: new URL('../../assets/teamassets/banner.png', import.meta.url).href,
     description:
       'Enim et faucibus maximus, nulla massa finibus arcu, ornare euismod…',
     createdAT: '12-12-2024',
@@ -52,7 +56,8 @@ export const teams: Team[] = [
   {
     id: 3,
     name: 'Attax',
-    logo: '/assets/teams/team3.png',
+    logo: new URL('../../assets/teamsassets/team1.png', import.meta.url).href,
+    banner: new URL('../../assets/teamassets/banner.png', import.meta.url).href,
     description:
       'Enim et faucibus maximus, nulla massa finibus arcu, ornare euismod…',
     createdAT: '12-12-2024',
