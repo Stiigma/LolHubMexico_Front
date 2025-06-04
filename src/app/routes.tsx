@@ -15,6 +15,7 @@ import PreviewPage from "../feactures/teams/pages/PreviewPage";
 import BrowserPage from "../feactures/teams/pages/BrowserPage";
 import MyTeamPage from "../feactures/teams/pages/MyTeamPage";
 import InvitationTeamPage from "../feactures/teams/pages/InvitationTeamPage";
+import TeamDetail from "../feactures/teams/pages/TeamDetail";
 
 // Torneos
 import TournamentLayout from "../feactures/tournaments/layout/TournamentLayout";
@@ -80,6 +81,7 @@ const AppRoutes = () => {
           <Route path="browser" element={<BrowserPage />} />
           <Route path="my-team" element={<MyTeamPage />} />
           <Route path="invitation-team" element={<InvitationTeamPage />} />
+          <Route path=":id" element={<TeamDetail />} />
         </Route>
       </Route>
 

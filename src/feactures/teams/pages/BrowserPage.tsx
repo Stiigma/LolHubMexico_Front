@@ -1,47 +1,55 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { teams, type Team } from '../../../shared/data/teams'; // Asegúrate que la ruta sea correcta
 
-import teams from "../services/db";
-
-const BrowserPage = () => {
+export default function BrowserPage() {
   return (
-    <div className="text-white">
-      <h1 className="text-3xl font-bold mb-6 text-center">Explora Equipos</h1>
-      <p className="text-center text-gray-400 mb-10">Encuentra un equipo que comparta tu pasión competitiva.</p>
-
-      <div className="grid gap-6 max-w-4xl mx-auto">
-        {teams.map((team) => (
-            <div
-            key={team.IdTeam}
-            className="flex bg-[#112a46] rounded-lg shadow-md hover:shadow-xl transition hover:scale-[1.01] overflow-hidden"
-            >
-            {/* Logo */}
-            <div className="p-4 flex items-center justify-center">
-                <img
-                src={team.TeamLogo}
-                alt={team.TeamName}
-                className="w-20 h-20 rounded-full border-4 border-[#10b981]"
-                />
-            </div>
-
-            {/* Detalles */}
-            <div className="flex-1 px-4 py-3">
-                <h2 className="text-xl font-bold text-white">{team.TeamName}</h2>
-                <p className="text-sm text-gray-300">{team.DescripcionTeam}</p>
-                <p className="text-xs text-gray-400 mt-1">
-                Creado el: {new Date(team.CreationDate).toLocaleDateString()}
-                </p>
-            </div>
-
-            {/* Acción */}
-            <div className="flex items-center pr-6">
-                <button className="bg-[#10b981] hover:bg-[#34d399] text-white font-semibold text-sm px-4 py-2 rounded shadow-md transition active:scale-95">
-                Unirme al equipo
-                </button>
-            </div>
-            </div>
-        ))}
+    <div className="min-h-screen bg-[#0c0222] text-white font-sans">
+      {/* HERO */}
+      <header
+        className="relative h-[420px] flex items-center justify-center bg-center bg-cover"
+        style={{ backgroundImage: "url('/assets/dragon.jpg')" }} // Ruta pública
+      >
+        <div className="absolute inset-0 bg-[#0c0222]/80" />
+        <div className="relative z-10 text-center space-y-4 px-4">
+          <h1 className="text-4xl md:text-5xl font-extrabold">EXPLORA EQUIPOS</h1>
+          <p className="max-w-xl mx-auto text-gray-300 text-sm sm:text-base">
+            Encuentra un equipo que comparta tu pasión competitiva.
+          </p>
+          <span className="inline-block bg-[#1f0e63]/70 px-4 py-1.5 rounded-full border border-violet-500 text-sm tracking-wide">
+            HOME / TEAMS
+          </span>
         </div>
+      </header>
+
+      {/* GRID */}
+      <section className="px-4 py-8">
+        <div className="grid w-full justify-center grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-6">
+          {teams.map((team) => (
+            <TeamCard key={team.id} team={team} />
+          ))}
+        </div>
+      </section>
     </div>
   );
-};
+}
 
-export default BrowserPage;
+/* TARJETA --------------------------------------------- */
+function TeamCard({ team }: { team: Team }) {
+  return (
+    <Link
+      to={`/teams/${team.id}`}
+      className="group relative h-56 rounded-xl border-2 border-violet-600 bg-[#10173a] overflow-hidden shadow-lg hover:scale-105 transition-transform"
+    >
+      <img
+        src={team.logo}
+        alt={team.name}
+        className="w-full max-h-full object-contain p-6 mx-auto group-hover:scale-110 transition-transform"
+      />
+      <div className="absolute inset-0 bg-[#0c0222]/70 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+        <h2 className="text-lg font-bold text-center px-4">{team.name}</h2>
+      </div>
+    </Link>
+  );
+}
+
