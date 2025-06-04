@@ -6,11 +6,11 @@ import {
   FaEye,
   FaNewspaper,
   FaCloud,
-  FaHandshake, // nuevo ícono para Scrims
+  FaHandshake,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-const logo = "/assets/logo.png";
+const logo = "/assets/logo.png"; // Asegúrate de tener este logo en public/assets/
 
 const Sidebar = () => {
   return (
@@ -51,12 +51,11 @@ const Sidebar = () => {
 
         <hr className="my-4 border-blue-800" />
 
-        {/* NUEVA OPCIÓN: SCRIMS */}
         <Link to="/scrims/preview" className="flex items-center gap-3">
           <FaHandshake className="text-teal-300" /> Scrims
         </Link>
 
-        <Link to="/tournaments" className="flex items-center gap-3">
+        <Link to="/tournaments/preview" className="flex items-center gap-3">
           <FaCloud className="text-amber-300" /> Torneos
         </Link>
       </nav>
@@ -65,7 +64,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
-
-
-

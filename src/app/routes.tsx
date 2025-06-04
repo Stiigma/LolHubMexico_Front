@@ -1,29 +1,42 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from "react-router-dom";
 
-// Páginas principales
-import HomePage from '../feactures/home/pages/HomePage';
-import LoginPage from '../feactures/auth/pages/LoginPage';
-import RegisterPage from '../feactures/auth/pages/RegisterPage';
-import DashboardPage from '../feactures/dashboard/pages/DashboardPage';
+// Páginas públicas
+import HomePage from "../feactures/home/pages/HomePage";
+import LoginPage from "../feactures/auth/pages/LoginPage";
+import RegisterPage from "../feactures/auth/pages/RegisterPage";
+
+// Dashboard y perfil
+import DashboardPage from "../feactures/dashboard/pages/DashboardPage";
+import EditProfilePage from "../feactures/user/pages/EditProfilePage";
 
 // Equipos
-import TeamsLayout from '../feactures/teams/layout/TeamsLayout';
-import PreviewPage from '../feactures/teams/pages/PreviewPage';
-import BrowserPage from '../feactures/teams/pages/BrowserPage';
-import MyTeamPage from '../feactures/teams/pages/MyTeamPage';
-import InvitationTeamPage from '../feactures/teams/pages/InvitationTeamPage';
-
-// Perfil
-import EditProfilePage from '../feactures/user/pages/EditProfilePage.tsx';
+import TeamsLayout from "../feactures/teams/layout/TeamsLayout";
+import PreviewPage from "../feactures/teams/pages/PreviewPage";
+import BrowserPage from "../feactures/teams/pages/BrowserPage";
+import MyTeamPage from "../feactures/teams/pages/MyTeamPage";
+import InvitationTeamPage from "../feactures/teams/pages/InvitationTeamPage";
 
 // Torneos
-import TournamentsPage from '../feactures/tournaments/pages/TournamentsPage';
-import CreateTournamentPage from '../feactures/tournaments/pages/CreateTournamentPage';
-import TournamentDetailPage from '../feactures/tournaments/pages/TournamentDetailPage';
-import EditTournamentPage from '../feactures/tournaments/pages/EditTournamentPage.tsx';
+import TournamentLayout from "../feactures/tournaments/layout/TournamentLayout";
+import TournamentsPreviewPage from "../feactures/tournaments/pages/TournamentsPreviewPage";
+import MyTournamentsPage from "../feactures/tournaments/pages/MyTournamentsPage";
+import InvitationsPageTournaments from "../feactures/tournaments/pages/InvitationsPage";
+import CreateTournamentPage from "../feactures/tournaments/pages/CreateTournamentPage";
+import TournamentDetailPage from "../feactures/tournaments/pages/TournamentDetailPage";
+import EditTournamentPage from "../feactures/tournaments/pages/EditTournamentPage";
+
+// Scrims
+import ScrimsLayout from "../feactures/scrims/layout/ScrimsLayout";
+import ScrimsPreviewPage from "../feactures/scrims/pages/ScrimsPreviewPage";
+import MyScrimsPage from "../feactures/scrims/pages/MyScrimsPage";
+import InvitationsPageScrims from "../feactures/scrims/pages/InvitationsPage";
+import ScrimDetailPage from "../feactures/scrims/pages/ScrimDetailPage";
+
+// Layout general
+import MainLayout from "../layouts/MainLayout";
 
 // Protección de rutas privadas
-import PrivateRoute from '../core/PrivateRoute.tsx';
+import PrivateRoute from "../core/PrivateRoute";
 
 const AppRoutes = () => {
   return (
@@ -53,51 +66,67 @@ const AppRoutes = () => {
         }
       />
 
-      {/* Equipos */}
-      <Route path="/teams" element={<TeamsLayout />}>
-        <Route path="preview" element={<PreviewPage />} />
-        <Route path="browser" element={<BrowserPage />} />
-        <Route path="my-team" element={<MyTeamPage />} />
-        <Route path="invitation-team" element={<InvitationTeamPage />} />
+      {/* Equipos bajo MainLayout */}
+      <Route
+        path="/teams"
+        element={
+          <PrivateRoute>
+            <MainLayout />
+          </PrivateRoute>
+        }
+      >
+        <Route element={<TeamsLayout />}>
+          <Route path="preview" element={<PreviewPage />} />
+          <Route path="browser" element={<BrowserPage />} />
+          <Route path="my-team" element={<MyTeamPage />} />
+          <Route path="invitation-team" element={<InvitationTeamPage />} />
+        </Route>
       </Route>
 
-      {/* Torneos */}
+      {/* Torneos bajo MainLayout */}
       <Route
         path="/tournaments"
         element={
           <PrivateRoute>
-            <TournamentsPage />
+            <MainLayout />
           </PrivateRoute>
         }
-      />
+      >
+        <Route element={<TournamentLayout />}>
+          <Route index element={<Navigate to="preview" replace />} />
+          <Route path="preview" element={<TournamentsPreviewPage />} />
+          <Route path="my" element={<MyTournamentsPage />} />
+          <Route path="invitations" element={<InvitationsPageTournaments />} />
+        </Route>
+        <Route path="create" element={<CreateTournamentPage />} />
+        <Route path=":id" element={<TournamentDetailPage />} />
+        <Route path=":id/edit" element={<EditTournamentPage />} />
+      </Route>
+
+      {/* Scrims bajo MainLayout */}
       <Route
-        path="/tournaments/create"
+        path="/scrims"
         element={
           <PrivateRoute>
-            <CreateTournamentPage />
+            <MainLayout />
           </PrivateRoute>
         }
-      />
-      <Route
-        path="/tournaments/:id"
-        element={
-          <PrivateRoute>
-            <TournamentDetailPage />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/tournaments/:id/edit"
-        element={
-          <PrivateRoute>
-            <EditTournamentPage />
-          </PrivateRoute>
-        }
-      />
+      >
+        <Route element={<ScrimsLayout />}>
+          <Route path="preview" element={<ScrimsPreviewPage />} />
+          <Route path="mine" element={<MyScrimsPage />} />
+          <Route path="invitations" element={<InvitationsPageScrims />} />
+        </Route>
+        <Route path=":id" element={<ScrimDetailPage />} />
+      </Route>
     </Routes>
   );
 };
 
 export default AppRoutes;
+
+
+
+
 
 
