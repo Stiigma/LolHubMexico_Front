@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useUser } from '../../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
-import { FaPlus } from 'react-icons/fa';
+import { FaEdit } from 'react-icons/fa';
 import AvatarModal from '../components/AvatarModal';
 
 const avatarOptions = [
@@ -33,83 +33,97 @@ const EditProfilePage: React.FC = () => {
     };
 
     console.log('Datos actualizados:', updated);
-    navigate('/dashboard');
+    navigate('/profile');
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-blue-900 text-white flex flex-col items-center p-8">
-      <h1 className="text-3xl font-bold mb-6">Editar Perfil</h1>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-blue-900 text-white flex justify-center items-center px-6 py-12">
+      <div className="bg-[#0F172A] rounded-2xl p-10 shadow-xl w-full max-w-4xl">
+        <h1 className="text-3xl font-bold text-center mb-10">Editar Perfil</h1>
 
-      <div className="bg-blue-950 p-6 rounded-xl w-full max-w-md shadow-xl flex flex-col items-center space-y-4 relative">
-        {/* Avatar con botón "+" */}
-        <div className="relative">
-          <img
-            src={profileImage}
-            alt="Foto de perfil"
-            className="w-24 h-24 rounded-full border-2 border-white object-cover"
-          />
-          <button
-            onClick={() => setShowModal(true)}
-            className="absolute -bottom-1 -right-1 bg-blue-600 hover:bg-blue-700 p-1 rounded-full text-sm"
-          >
-            <FaPlus />
-          </button>
+        <div className="flex flex-col md:flex-row gap-12 items-center">
+          {/* Avatar */}
+          <div className="relative w-36 h-36">
+            <img
+              src={profileImage}
+              alt="Foto de perfil"
+              className="w-full h-full rounded-full border-4 border-white object-cover"
+            />
+            <button
+              onClick={() => setShowModal(true)}
+              className="absolute -bottom-1 -right-1 bg-blue-600 hover:bg-blue-700 p-2 rounded-full text-sm shadow-lg"
+            >
+              <FaEdit />
+            </button>
+          </div>
+
+          {/* Formulario */}
+          <div className="flex-1 grid md:grid-cols-2 gap-8 w-full">
+            <div>
+              <label className="block text-sm font-semibold mb-1">Nombre de usuario</label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full p-2 rounded bg-gray-800 text-white border border-gray-600"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold mb-1">Nombre completo</label>
+              <input
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="w-full p-2 rounded bg-gray-800 text-white border border-gray-600"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold mb-1">Número de teléfono</label>
+              <input
+                type="text"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                className="w-full p-2 rounded bg-gray-800 text-white border border-gray-600"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold mb-1">Nacionalidad</label>
+              <input
+                type="text"
+                value={nacionality}
+                onChange={(e) => setNacionality(e.target.value)}
+                className="w-full p-2 rounded bg-gray-800 text-white border border-gray-600"
+              />
+            </div>
+          </div>
         </div>
-
-        {/* Campos de edición */}
-        <label className="w-full text-left text-sm mt-4">Nombre de usuario</label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="w-full p-2 rounded bg-gray-800 text-white border border-gray-600"
-        />
-
-        <label className="w-full text-left text-sm">Nombre completo</label>
-        <input
-          type="text"
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
-          className="w-full p-2 rounded bg-gray-800 text-white border border-gray-600"
-        />
-
-        <label className="w-full text-left text-sm">Número de teléfono</label>
-        <input
-          type="text"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          className="w-full p-2 rounded bg-gray-800 text-white border border-gray-600"
-        />
-
-        <label className="w-full text-left text-sm">Nacionalidad</label>
-        <input
-          type="text"
-          value={nacionality}
-          onChange={(e) => setNacionality(e.target.value)}
-          className="w-full p-2 rounded bg-gray-800 text-white border border-gray-600"
-        />
 
         <button
           onClick={handleSave}
-          className="w-full mt-4 bg-blue-600 hover:bg-blue-700 transition p-2 rounded text-white font-semibold"
+          className="w-full mt-10 bg-green-600 hover:bg-green-700 transition p-3 rounded-lg text-white font-bold shadow-md"
         >
           Guardar Cambios
         </button>
-      </div>
 
-      {/* Modal de selección de avatar */}
-      {showModal && (
-        <AvatarModal
-          avatars={avatarOptions}
-          onSelect={(url) => {
-            setProfileImage(url);
-            setShowModal(false);
-          }}
-          onClose={() => setShowModal(false)}
-        />
-      )}
+        {/* Modal de selección de avatar */}
+        {showModal && (
+          <AvatarModal
+            avatars={avatarOptions}
+            onSelect={(url) => {
+              setProfileImage(url);
+              setShowModal(false);
+            }}
+            onClose={() => setShowModal(false)}
+          />
+        )}
+      </div>
     </div>
   );
 };
 
 export default EditProfilePage;
+
+

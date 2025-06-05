@@ -14,6 +14,11 @@ interface Props {
 const ProfileModal: React.FC<Props> = ({ onClose, user }) => {
   const navigate = useNavigate();
 
+  const handleViewProfile = () => {
+    onClose();
+    navigate("/profile");
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
       <div className="bg-[#112a46] rounded-2xl p-6 w-full max-w-sm relative shadow-xl">
@@ -39,13 +44,10 @@ const ProfileModal: React.FC<Props> = ({ onClose, user }) => {
           </span>
 
           <button
-            onClick={() => {
-              onClose();
-              navigate("/profile/edit");
-            }}
+            onClick={handleViewProfile}
             className="mt-5 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded font-semibold"
           >
-            Editar Perfil
+            Ver Perfil
           </button>
         </div>
       </div>
@@ -54,4 +56,5 @@ const ProfileModal: React.FC<Props> = ({ onClose, user }) => {
 };
 
 export default ProfileModal;
+
 

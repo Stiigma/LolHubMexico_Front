@@ -8,6 +8,7 @@ import RegisterPage from "../feactures/auth/pages/RegisterPage";
 // Dashboard y perfil
 import DashboardPage from "../feactures/dashboard/pages/DashboardPage";
 import EditProfilePage from "../feactures/user/pages/EditProfilePage";
+import ViewProfilePage from "../feactures/user/pages/ViewProfilePage";
 
 // Equipos
 import TeamsLayout from "../feactures/teams/layout/TeamsLayout";
@@ -57,15 +58,18 @@ const AppRoutes = () => {
         }
       />
 
-      {/* Perfil */}
+      {/* Perfil bajo MainLayout */}
       <Route
-        path="/profile/edit"
+        path="/profile"
         element={
           <PrivateRoute>
-            <EditProfilePage />
+            <MainLayout />
           </PrivateRoute>
         }
-      />
+      >
+        <Route index element={<ViewProfilePage />} />
+        <Route path="edit" element={<EditProfilePage />} />
+      </Route>
 
       {/* Equipos bajo MainLayout */}
       <Route
@@ -126,6 +130,8 @@ const AppRoutes = () => {
 };
 
 export default AppRoutes;
+
+
 
 
 
