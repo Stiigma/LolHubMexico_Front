@@ -82,7 +82,7 @@ const RegisterPage: React.FC = () => {
           <AuthInput
             type="tel"
             placeholder="Número de teléfono (+52...)"
-            pattern="^\\+52\\d{10}$"
+            //pattern="^\\+52\\d{14}$"
             value={PhoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
             required

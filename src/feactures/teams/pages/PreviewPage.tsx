@@ -4,7 +4,9 @@ import CreateTeamModal from "../components/CreateTeamModal";
 import { useUser } from "../../../context/UserContext";
 import type { CreateTeam } from "../types/CreateTeam";
 import { createTeam } from "../services/teamService";
+import { updateTeam } from '@/feactures/teams/services/teamService';
 import type { Team } from "../types/Team";
+import { uploadTeamLogo } from "@/services/firabase/uploadTeamLogo";
 
 const banner = "/assets/preview/banner.png";
 const team = "/assets/preview/team.png";
@@ -17,26 +19,45 @@ const PreviewPage = () => {
   const { user } = useUser();
   const navigate = useNavigate();
 
-  const handleCreateTeam = async (newTeam: CreateTeam) => {
+  const handleCreateTeam = async (newTeam: CreateTeam, imageBlob: Blob | null) => {
+    let logoUrl: string | null = null;
     try {
       if (!user) throw new Error("Usuario no autenticado");
+
       const result = await createTeam(newTeam);
       const resultTeam = result.createdTeam;
+
+      let logoUrl = "";
+
+      if (imageBlob !== null) {
+        const fileFromBlob = new File([imageBlob], 'foto.png', { type: 'image/png' });
+        logoUrl = await uploadTeamLogo(resultTeam.idTeam, fileFromBlob);
+      }
+
+      // Actualiza el registro del equipo con la imagen
+      await updateTeam({
+        ...resultTeam,
+           teamLogo: logoUrl,
+         });
+       
+
       const nTeam: Team = {
         idCapitan: resultTeam.idCapitan,
         idTeam: resultTeam.idTeam,
-        teamLogo: resultTeam.teamLogo,
+        teamLogo: logoUrl || resultTeam.teamLogo,
         teamName: resultTeam.teamName,
         status: resultTeam.status,
         creationDate: resultTeam.creationDate,
         descripcionTeam: resultTeam.descripcionTeam,
       };
+
       setSuccessMessage("¡Equipo creado exitosamente!");
       setTimeout(() => {
         setShowModal(false);
         navigate("/teams/my-team", { state: { team: nTeam } });
       }, 1500);
-    } catch (err) {
+    }
+     catch (err) {
       console.error("Error creando equipo:", err);
     }
   };

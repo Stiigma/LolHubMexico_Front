@@ -6,7 +6,9 @@ import type { Team } from "../types/Team";
 import { getMyTeam, searchUsersByName } from "../services/teamService";
 import { Settings, BarChart2, UserPlus } from "lucide-react";
 import type { UserSearchDTO } from "../../auth/types/UserSearchDTO";
-
+import type { TeamMemberDTO } from "../types/TeamMemberDTO";
+import { getTeamMembersEnriched } from "../services/teamService";
+import MemberTeam from "../components/MemberTeam";
 import { inviteUserToTeam } from "../services/teamService";
 
 const MyTeamPage: React.FC = () => {
@@ -20,15 +22,23 @@ const MyTeamPage: React.FC = () => {
 
   const { user } = useUser();
   const navigate = useNavigate();
+  const [members, setMembers] = useState<TeamMemberDTO[]>([]);
 
   useEffect(() => {
-    if (!user?.idUser) return;
+  if (!user?.idUser) return;
 
     getMyTeam(user.idUser)
-      .then(setTeam)
-      .catch(() => setError("Error al obtener tu equipo"))
-      .finally(() => setLoading(false));
-  }, [user]);
+      .then(async (fetchedTeam) => {
+        setTeam(fetchedTeam);
+    console.log(fetchedTeam);
+
+      // Ahora que tienes el equipo, obtén los miembros
+      const enrichedMembers = await getTeamMembersEnriched(fetchedTeam.idTeam);
+      setMembers(enrichedMembers);
+    })
+    .catch(() => setError("Error al obtener tu equipo"))
+    .finally(() => setLoading(false));
+}, [user]);
 
   const handleSearch = async () => {
     if (!searchTerm.trim()) return;
@@ -104,7 +114,11 @@ const MyTeamPage: React.FC = () => {
 
         <div className="bg-[#112a46] rounded-xl shadow-lg p-8 flex flex-col sm:flex-row items-center">
           <div className="w-32 h-32 bg-gray-700 rounded-full flex items-center justify-center text-3xl font-bold mr-8">
-            {team.teamName.charAt(0)}
+            <img
+                src={team.teamLogo}
+                alt="Logo del equipo"
+                className="w-32 h-32 bg-gray-700 rounded-full object-cover"
+              />
           </div>
           <div className="flex-1">
             <h2 className="text-3xl font-extrabold mb-2">{team.teamName}</h2>
@@ -177,6 +191,12 @@ const MyTeamPage: React.FC = () => {
           </div>
         </div>
       )}
+
+      <div className="mt-10 space-y-4">
+        {members.map((member) => (
+          <MemberTeam key={member.idUser} member={member} />
+        ))}
+      </div>
     </div>
   );
 };

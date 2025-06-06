@@ -3,21 +3,74 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "../../../context/UserContext";
 import type { TeamInvitationDTO } from "../types/TeamInvitations";
 import { getMyInvitations } from "../services/invitationService";
-
+import { respondToInvitation } from "../services/invitationService";
+import { toast } from "react-toastify";
+import { getMyTeam } from "../services/teamService";
+import { getUserById } from "@/feactures/user/services/userService";
 const InvitationTeamPage: React.FC = () => {
   const { user } = useUser();
   const [invitations, setInvitations] = useState<TeamInvitationDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const handleRespondToInvitation = async (idTeam: number, response: boolean, idInvitation: number) => {
+  if (!user) return;
+
+  try {
+    const dto = {
+      idUser: user.idUser,
+      idInvitation,
+      idTeam,
+      response,
+    };
+
+    await respondToInvitation(dto);
+    setInvitations((prev) => prev.filter((inv) => inv.idTeam !== idTeam));
+
+    toast.success(
+    response ? "¡Te has unido al equipo exitosamente!" : "Has rechazado la invitación.",
+    { position: "top-center" }
+  );
+  } catch (err) {
+    console.error("Error al responder la invitación", err);
+    setError("Ocurrió un error al responder la invitación.");
+    toast.error("Ocurrió un error al responder la invitación.", { position: "top-center" });
+  }
+};
+
   useEffect(() => {
+  const fetchData = async () => {
     if (!user?.idUser) return;
 
-    getMyInvitations(user.idUser)
-      .then(setInvitations)
-      .catch(() => setError("Error al cargar las invitaciones"))
-      .finally(() => setLoading(false));
-  }, [user]);
+    try {
+      const rawInvitations = await getMyInvitations(user.idUser);
+
+      const enrichedInvitations = await Promise.all(
+        rawInvitations.map(async (inv) => {
+          const [teamData, userData] = await Promise.all([
+            getMyTeam(inv.invitedBy),
+            getUserById(inv.invitedBy),
+          ]);
+
+          return {
+            ...inv,
+            teamName: teamData.teamName,
+            invitedByUsername: userData.userName,
+          };
+        })
+      );
+
+      setInvitations(enrichedInvitations);
+    } catch (err) {
+      console.error(err);
+      setError("Error al cargar las invitaciones.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, [user]);
 
   if (loading) {
     return (
@@ -64,10 +117,16 @@ const InvitationTeamPage: React.FC = () => {
               </div>
 
               <div className="mt-4 sm:mt-0 sm:ml-4 flex space-x-2">
-                <button className="bg-[#10b981] hover:bg-[#34d399] px-4 py-2 rounded font-semibold">
+                <button
+                  className="bg-[#10b981] hover:bg-[#34d399] px-4 py-2 rounded font-semibold"
+                  onClick={() => handleRespondToInvitation(inv.idTeam, true, inv.idInvitation)}
+                >
                   Aceptar
                 </button>
-                <button className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded font-semibold">
+                <button
+                  className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded font-semibold"
+                  onClick={() => handleRespondToInvitation(inv.idTeam, false, inv.idInvitation)}
+                >
                   Rechazar
                 </button>
               </div>
