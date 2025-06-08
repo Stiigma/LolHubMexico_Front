@@ -33,6 +33,8 @@ import ScrimsPreviewPage from "../feactures/scrims/pages/ScrimsPreviewPage";
 import MyScrimsPage from "../feactures/scrims/pages/MyScrimsPage";
 import InvitationsPageScrims from "../feactures/scrims/pages/InvitationsPage";
 import ScrimDetailPage from "../feactures/scrims/pages/ScrimDetailPage";
+import CompletedScrimDetailPage from "../feactures/scrims/pages/CompletedScrimDetailPage";
+import EditScrimPage from "../feactures/scrims/pages/EditScrimPage";
 
 // Layout general
 import MainLayout from "../layouts/MainLayout";
@@ -123,6 +125,8 @@ const AppRoutes = () => {
           <Route path="mine" element={<MyScrimsPage />} />
           <Route path="invitations" element={<InvitationsPageScrims />} />
         </Route>
+        <Route path="history/:id" element={<CompletedScrimDetailPage />} />
+        <Route path=":id/edit" element={<EditScrimPage />} />
         <Route path=":id" element={<ScrimDetailPage />} />
       </Route>
     </Routes>
@@ -130,7 +134,6 @@ const AppRoutes = () => {
 };
 
 export default AppRoutes;
-
 
 
 

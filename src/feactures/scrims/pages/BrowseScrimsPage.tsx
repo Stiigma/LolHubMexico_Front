@@ -1,39 +1,67 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import ScrimCard from '../components/ScrimCard';
 
-const mockScrims = [
-  {
-    id: 1,
-    teamName: 'Voidwalkers',
-    rank: 'Platino - Diamante',
-    objective: 'Práctica seria con draft competitivo',
-    date: '2025-06-15',
-  },
-  {
-    id: 2,
-    teamName: 'Jungle Control',
-    rank: 'Oro - Platino',
-    objective: 'Pulir macro y control de visión',
-    date: '2025-06-18',
-  },
-  {
-    id: 3,
-    teamName: 'Team Eclipse',
-    rank: 'Diamante - Master',
-    objective: 'Scrim preparatorio para torneo',
-    date: '2025-06-20',
-  },
-];
-
 const BrowseScrimsPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  // Lista estática de scrims
+  const scrims = [
+    {
+      id: 1,
+      teamName: 'RIP Top Lane',
+      playerIcons: [
+        '/assets/champions/fiora.png',
+        '/assets/champions/ornn.png',
+        '/assets/champions/lucian.png',
+        '/assets/champions/nami.png',
+        '/assets/champions/zed.png',
+      ],
+      gamestyle: 'Pick',
+      scalingLevel: 'medium',
+    },
+    {
+      id: 2,
+      teamName: 'Frog and Friends',
+      playerIcons: [
+        '/assets/champions/braum.png',
+        '/assets/champions/leesin.png',
+        '/assets/champions/lux.png',
+        '/assets/champions/tahmkench.png',
+        '/assets/champions/katarina.png',
+      ],
+      gamestyle: 'Split',
+      scalingLevel: 'high',
+    },
+    {
+      id: 3,
+      teamName: 'Midnight Ganks',
+      playerIcons: [
+        '/assets/champions/nocturne.png',
+        '/assets/champions/syndra.png',
+        '/assets/champions/jhin.png',
+        '/assets/champions/karma.png',
+        '/assets/champions/shen.png',
+      ],
+      gamestyle: 'Engage',
+      scalingLevel: 'low',
+    },
+  ];
+
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold mb-4">Scrims disponibles</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {mockScrims.map((scrim) => (
-          <ScrimCard key={scrim.id} scrim={scrim} />
-        ))}
-      </div>
+    <div className="text-white px-8 py-6 space-y-6">
+      <h1 className="text-3xl font-bold">Explorar Scrims Disponibles</h1>
+
+      {scrims.map((scrim) => (
+        <ScrimCard
+          key={scrim.id}
+          teamName={scrim.teamName}
+          playerIcons={scrim.playerIcons}
+          gamestyle={scrim.gamestyle}
+          scalingLevel={scrim.scalingLevel as 'low' | 'medium' | 'high'}
+          onClick={() => navigate(`/scrims/${scrim.id}`)}
+        />
+      ))}
     </div>
   );
 };
