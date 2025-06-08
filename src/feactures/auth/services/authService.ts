@@ -1,8 +1,11 @@
 import type { CreateUserDTO } from '../types/CreateUserDTO';
 import type { LoginUserDTO } from '../types/LoginUserDTO';
+import { API_URL } from '@/core/utils/API_URL';
+const api = "https://lolhubmexico.onrender.com";
+
 
 export const registerUser = async (user: CreateUserDTO) => {
-  const response = await fetch('https://lolhubmexico.onrender.com/api/Users/register', {
+  const response = await fetch(`${API_URL}/api/Users/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(user),
@@ -18,7 +21,7 @@ export const registerUser = async (user: CreateUserDTO) => {
 
 
 export const loginUser = async (credentials: LoginUserDTO) => {
-    const response = await fetch('https://lolhubmexico.onrender.com/api/Users/login', {
+    const response = await fetch(`${API_URL}/api/Users/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials),

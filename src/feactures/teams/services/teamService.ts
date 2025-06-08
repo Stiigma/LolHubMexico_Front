@@ -4,8 +4,9 @@ import type { CreateTeamInvitationDTO } from "../types/CreateTeamInvitationDTO";
 import type { TeamMemberDTO } from "../types/TeamMemberDTO";
 import { getUserById } from "@/feactures/user/services/userService";
 import { getPlayerById } from "@/feactures/user/services/userService";
+import { API_URL } from '@/core/utils/API_URL';
 
-const API_URL = "https://lolhubmexico.onrender.com/api/Team";
+const API_URL2 = "https://lolhubmexico.onrender.com/api/Team";
 
 interface CreateTeamDTO {
   teamName: string;
@@ -15,7 +16,7 @@ interface CreateTeamDTO {
 
 export const createTeam = async (data: CreateTeamDTO) => {
     console.log("Servicio...");
-  const response = await axios.post(`${API_URL}/create-team`, data, {
+  const response = await axios.post(`${API_URL}/api/Team/create-team`, data, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -26,7 +27,7 @@ export const createTeam = async (data: CreateTeamDTO) => {
 
 export const updateTeam = async (data: Team) => {
   console.log("Servicio...");
-  const response = await axios.put(`${API_URL}/update`, data, {
+  const response = await axios.put(`${API_URL}/api/Team/update`, data, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -37,7 +38,7 @@ export const updateTeam = async (data: Team) => {
 
 export const getMyTeam = async (idUser: number): Promise<Team> => {
   try {
-    const response = await axios.get(`${API_URL}/my-team`, {
+    const response = await axios.get(`${API_URL}/api/Team/my-team`, {
       params: { idUser },
     });
     console.log(response.data.team)
@@ -51,7 +52,7 @@ export const getMyTeam = async (idUser: number): Promise<Team> => {
 
 export const getTeamMembers = async (idTeam: number): Promise<TeamMemberDTO[]> => {
   try {
-    const response = await axios.get(`${API_URL}/members`, {
+    const response = await axios.get(`${API_URL}/api/Team/members`, {
       params: { idTeam },
     });
 
@@ -64,14 +65,16 @@ export const getTeamMembers = async (idTeam: number): Promise<TeamMemberDTO[]> =
 
 export const getTeamMembersEnriched = async (idTeam: number): Promise<TeamMemberDTO[]> => {
   const baseMembers = await getTeamMembers(idTeam); // el original que ya tienes
-
+  console.log("Dentro del servicio:")
+  console.log(baseMembers)
 
   // Enriquecer cada miembro con su email y username
   const enriched = await Promise.all(
     baseMembers.map(async (member) => {
       try {
         const user = await getUserById(member.idUser);
-
+        console.log("Usuarios")
+        console.log(user)
         let player = null;
         let linkSummoner = false;
 
@@ -79,7 +82,7 @@ export const getTeamMembersEnriched = async (idTeam: number): Promise<TeamMember
           player = await getPlayerById(member.idUser);
           linkSummoner = true;
         } catch (err) {
-          // No vinculado, se mantiene linkSummoner en false
+          console.log(err)
         }
 
         return {
@@ -90,6 +93,7 @@ export const getTeamMembersEnriched = async (idTeam: number): Promise<TeamMember
           linkSummoner,
         };
       } catch (err) {
+        console.log(err)
         return member; // Fallback: sin enriquecer
       }
     })
@@ -102,7 +106,7 @@ export const getTeamMembersEnriched = async (idTeam: number): Promise<TeamMember
 // src/features/teams/services/teamService.ts
 export const searchUsersByName = async (query: string) => {
   try {
-    const response = await axios.get("https://lolhubmexico.onrender.com/api/Users/search", {
+    const response = await axios.get(`${API_URL}/api/Users/search`, {
       params: { query },
     });
     return response.data; // ← debe ser un arreglo de UserSearchDTO
@@ -115,7 +119,7 @@ export const searchUsersByName = async (query: string) => {
 
 export const inviteUserToTeam = async (dto: CreateTeamInvitationDTO) => {
   try {
-    const response = await axios.post("http://localhost:5022/api/TeamInvitation/invite", dto);
+    const response = await axios.post(`${API_URL}/api/TeamInvitation/invite`, dto);
     return response.data;
   } catch (error) {
     console.error("Error al enviar la invitación:", error);

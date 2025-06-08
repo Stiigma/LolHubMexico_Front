@@ -1,11 +1,12 @@
 import axios from "axios";
 import type { TeamInvitationDTO } from "../types/TeamInvitations";
 import type { JoinTeamDTO } from "../types/JoinTeamDTO";
+import { API_URL } from "@/core/utils/API_URL";
 
-const API_URL = "https://lolhubmexico.onrender.com/api/TeamInvitation";
+const API_URL2 = "https://lolhubmexico.onrender.com/api/TeamInvitation";
 
 export const getMyInvitations = async (idUser: number): Promise<TeamInvitationDTO[]> => {
-  const response = await axios.get(`${API_URL}/my-invite`, {
+  const response = await axios.get(`${API_URL}/api/TeamInvitation/my-invite`, {
     params: { idUser },
   });
   console.log(response.data.invitation);
@@ -15,7 +16,7 @@ export const getMyInvitations = async (idUser: number): Promise<TeamInvitationDT
 
 export const respondToInvitation = async (dto: JoinTeamDTO) => {
   try {
-    const response = await axios.post(`${API_URL}/joinTeam`, dto, {
+    const response = await axios.post(`${API_URL}/api/TeamInvitation/joinTeam`, dto, {
       headers: {
         "Content-Type": "application/json",
       },
