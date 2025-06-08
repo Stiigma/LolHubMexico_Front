@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { useUser } from '../../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { FaEdit } from 'react-icons/fa';
 import AvatarModal from '../components/AvatarModal';
+import { getPlayerById } from "../services/userService";
+import type { PlayerDTO } from "../types/PlayerDTO";
 
 const avatarOptions = [
   '/assets/avatars/avatar1.png',
@@ -15,12 +17,21 @@ const avatarOptions = [
 const EditProfilePage: React.FC = () => {
   const { user } = useUser();
   const navigate = useNavigate();
+  const [player, setPlayer] = useState<PlayerDTO | null>(null);
+  useEffect(() => {
+  const fetchPlayer = async () => {
+    if (!user?.idUser) return;
+    const result = await getPlayerById(user.idUser);
+    setPlayer(result); // Aquí asumes que tienes un setPlayer
+  };
 
+  fetchPlayer();
+}, [user]);
   const [username, setUsername] = useState(user?.userName || '');
   const [fullName, setFullName] = useState(user?.fullName || '');
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || '');
   const [nacionality, setNacionality] = useState(user?.nacionality || '');
-  const [profileImage, setProfileImage] = useState(user?.profileImage || avatarOptions[0]);
+  const [profileImage, setProfileImage] = useState(player?.profilePicture || avatarOptions[0]);
   const [showModal, setShowModal] = useState(false);
 
   const handleSave = () => {
