@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 export const getUserById = async (idUser: number) => {
-  const response = await axios.get(`http://localhost:5022/api/Users/by-id`, {
+  const response = await axios.get(`ttps://lolhubmexico.onrender.com/api/Users/by-id`, {
     params: { idUser },
   });
   console.log(response.data.UserDTO)
@@ -11,7 +11,7 @@ export const getUserById = async (idUser: number) => {
 
 
 export const getPlayerById = async (idUser: number) => {
-    const response = await axios.get(`http://localhost:5022/api/Player/by-user`, {
+    const response = await axios.get(`https://lolhubmexico.onrender.com/api/Player/by-user`, {
         params: {idUser},
 
     })

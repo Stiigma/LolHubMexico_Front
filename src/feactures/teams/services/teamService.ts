@@ -5,7 +5,7 @@ import type { TeamMemberDTO } from "../types/TeamMemberDTO";
 import { getUserById } from "@/feactures/user/services/userService";
 import { getPlayerById } from "@/feactures/user/services/userService";
 
-const API_URL = "http://localhost:5022/api/Team";
+const API_URL = "https://lolhubmexico.onrender.com/api/Team";
 
 interface CreateTeamDTO {
   teamName: string;
@@ -102,7 +102,7 @@ export const getTeamMembersEnriched = async (idTeam: number): Promise<TeamMember
 // src/features/teams/services/teamService.ts
 export const searchUsersByName = async (query: string) => {
   try {
-    const response = await axios.get("http://localhost:5022/api/Users/search", {
+    const response = await axios.get("https://lolhubmexico.onrender.com/api/Users/search", {
       params: { query },
     });
     return response.data; // ← debe ser un arreglo de UserSearchDTO
