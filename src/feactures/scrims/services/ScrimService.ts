@@ -156,3 +156,5 @@ export const getScrimById = async (idScrim: number): Promise<ScrimPDTO | null> =
 
 
 
+
+
