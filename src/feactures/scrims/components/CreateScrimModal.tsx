@@ -65,11 +65,13 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
       idTeam1: team.idTeam,     // desde contexto o props
       idTeam2: 0,               // aún no definido
       scheduled_date,
-      idsUsers: players, // Asumiendo que cada jugador tiene idUser
+      idsUsers: players,
+      description: description,
+      tittle: title,
     };
-
+    console.log(dto);
     const success = await createScrim(dto);
-
+    console.log(success);
     if (success) {
       alert("Scrim creada correctamente ✅");
       onClose(); // cerrar modal
