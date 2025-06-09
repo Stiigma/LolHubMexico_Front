@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "@/context/UserContext";
 import type { ScrimEnriched } from "../types/ScrimEnriched";
 import type { IScrimPreview } from "../types/ScrimPreview";
 import UserInfoCard from "./UserInfoCard";
 import type { LinkUser } from "@/feactures/user/types/LinkUser";
 import { getScrimPlayers } from "../services/ScrimService";
+import type { RivalDTO } from "../types/RivalDTO";
+import { acceptScrim } from "../services/ScrimService";
 
 const ScrimPreview: React.FC<IScrimPreview> = ({ scrimEnriched, isOpen, onClose }) => {
   const [players, setPlayers] = useState<LinkUser[]>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const user = useUser().user;
   useEffect(() => {
     const fetchPlayers = async () => {
       if (isOpen) {
@@ -36,9 +39,25 @@ const ScrimPreview: React.FC<IScrimPreview> = ({ scrimEnriched, isOpen, onClose 
 
   const fechaFormateada = new Date(scrimEnriched.scrimPDTO.scheduled_date).toLocaleString("es-MX");
 
-  const handleJoinScrim = () => {
-    navigate(`/scrims/${scrimEnriched.scrimPDTO.idScrim}`);
-  };
+  const handleJoinScrim = async () => {
+    if (!user) {
+        alert("Debes iniciar sesión para unirte a una scrim.");
+        return;
+        }
+    const dto: RivalDTO = {
+        idScrim: scrimEnriched.scrimPDTO.idScrim,
+        idRival: user?.idUser, // Ajusta según cómo obtienes el equipo del usuario
+        isAccept: true,
+        idsUsers: [user.idUser], 
+    };
+
+    const success = await acceptScrim(dto);
+    if (success) {
+        navigate(`/scrims/mine`);
+    } else {
+        alert("Hubo un error al aceptar la scrim");
+    }
+    };
 
   return (
     <div

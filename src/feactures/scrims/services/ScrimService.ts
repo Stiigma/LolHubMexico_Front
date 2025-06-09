@@ -6,6 +6,7 @@ import { getTeambyId } from "@/feactures/teams/services/teamService";
 import { getUserById } from "@/feactures/user/services/userService";
 import type { PlayerStats } from "@/feactures/user/types/PlayerStats";
 import type { ScrimDetail } from "../types/ScrimDetail";
+import type { RivalDTO } from "../types/RivalDTO";
 
 
 export const getScrimPending = async () => {
@@ -14,6 +15,17 @@ export const getScrimPending = async () => {
   });
   console.log(response.data)
   return response.data; // Asume que retorna { username, ... }
+};
+
+export const acceptScrim = async (dto: RivalDTO): Promise<boolean> => {
+  try {
+    const response = await axios.post(`${API_URL}/api/Scrim/accept-scrim`, dto);
+    console.log("Scrim aceptada correctamente:", response.data.IsAcccept);
+    return true;
+  } catch (error) {
+    console.error("Error al aceptar la scrim:", error);
+    return false;
+  }
 };
 
 export const getScrimEnriched = async (scrim: ScrimPDTO): Promise<ScrimEnriched | null> => {
