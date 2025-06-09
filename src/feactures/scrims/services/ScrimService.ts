@@ -29,6 +29,26 @@ export const acceptScrim = async (dto: RivalDTO): Promise<boolean> => {
   }
 };
 
+export const isMyScrim = async (idScrim: number, idteam: number): Promise<boolean> => {
+  let IsMy = false;
+  try{
+    const scrim = await getScrimById(idScrim);
+    const team = await getTeambyId(idteam)
+    if(team.idTeam == scrim?.idTeam1)
+      IsMy = true;
+
+    if(team.idTeam == scrim?.idTeam2)
+      IsMy = true;
+
+    return IsMy;
+  }
+  catch{
+    return false;
+  }
+  
+
+};
+
 export const getScrimEnriched = async (scrim: ScrimPDTO): Promise<ScrimEnriched | null> => {
   const team1 = await getTeambyId(scrim.idTeam1);
   let team2 = null
