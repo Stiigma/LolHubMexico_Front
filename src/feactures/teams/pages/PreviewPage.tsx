@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CreateTeamModal from "../components/CreateTeamModal";
 import { useUser } from "../../../context/UserContext";
@@ -15,12 +15,11 @@ const rewards = "/assets/preview/rewards.png";
 
 const PreviewPage = () => {
   const [showModal, setShowModal] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
+  //const [successMessage, setSuccessMessage] = useState("");
   const { user } = useUser();
   const navigate = useNavigate();
 
   const handleCreateTeam = async (newTeam: CreateTeam, imageBlob: Blob | null) => {
-    let logoUrl: string | null = null;
     try {
       if (!user) throw new Error("Usuario no autenticado");
 
@@ -51,7 +50,7 @@ const PreviewPage = () => {
         descripcionTeam: resultTeam.descripcionTeam,
       };
 
-      setSuccessMessage("¡Equipo creado exitosamente!");
+      //setSuccessMessage("¡Equipo creado exitosamente!");
       setTimeout(() => {
         setShowModal(false);
         navigate("/teams/my-team", { state: { team: nTeam } });

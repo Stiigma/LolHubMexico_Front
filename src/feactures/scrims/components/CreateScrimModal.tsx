@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getMyTeam, getTeambyId, getTeamMembersEnriched, searchTeamsByName } from "@/feactures/teams/services/teamService";
+import { getMyTeam, getTeamMembersEnriched, searchTeamsByName } from "@/feactures/teams/services/teamService";
 import { useUser } from "@/context/UserContext";
 import { createScrim } from "../services/ScrimService";
 import type { CreateScrimDTO } from "../types/CreateScrimDTO";
@@ -18,7 +18,7 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
   const [time, setTime] = useState("");
   const [players, setPlayers] = useState<number[]>([]);
   const [availablePlayers, setAvailablePlayers] = useState<PlayerDTO[]>([]);
-  const [loadingPlayers, setLoadingPlayers] = useState(true);
+  //const [loadingPlayers, setLoadingPlayers] = useState(true);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [search, setSearch] = useState("");
   const [foundTeams, setFoundTeam] = useState<TeamSearchDTO[]>([]);
@@ -86,10 +86,10 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
         const members = await getTeamMembersEnriched(team.idTeam);
         const onlyPlayers = members.map(m => m.player!);
         setAvailablePlayers(onlyPlayers);
-        setLoadingPlayers(false);
+        //setLoadingPlayers(false);
       } catch (error) {
         console.error("Error al obtener jugadores del equipo:", error);
-        setLoadingPlayers(false);
+        //setLoadingPlayers(false);
       }
     };
     fetchPlayers();

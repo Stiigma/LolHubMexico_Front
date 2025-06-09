@@ -7,7 +7,6 @@ import { getPlayerById } from "@/feactures/user/services/userService";
 import { API_URL } from '@/core/utils/API_URL';
 import type { TeamSearchDTO } from "@/feactures/scrims/components/TeamSearchDTO";
 
-const API_URL2 = "https://lolhubmexico.onrender.com/api/Team";
 
 interface CreateTeamDTO {
   teamName: string;

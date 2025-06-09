@@ -1,5 +1,5 @@
 import React from "react";
-import CreateTournamentForm from "./CreateTournamentForm";
+//import CreateTournamentForm from "./CreateTournamentForm";
 
 interface Props {
   onClose: () => void;
@@ -22,8 +22,8 @@ const CreateTournamentModal: React.FC<Props> = ({ onClose }) => {
           Crear nuevo Torneo
         </h2>
 
-        {/* Formulario de creación */}
-        <CreateTournamentForm onSuccess={onClose} />
+        {/* Formulario de creación
+        <CreateTournamentForm onSuccess={onClose} /> */}
       </div>
     </div>
   );

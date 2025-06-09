@@ -4,7 +4,7 @@ import type { ScrimPDTO } from "../types/ScrimPDTO";
 import type { ScrimEnriched } from "../types/ScrimEnriched";
 import { getTeambyId } from "@/feactures/teams/services/teamService";
 import { getPlayerById, getUserById } from "@/feactures/user/services/userService";
-import type { PlayerStats } from "@/feactures/user/types/PlayerStats";
+//import type { PlayerStats } from "@/feactures/user/types/PlayerStats";
 import type { ScrimDetail } from "../types/ScrimDetail";
 import type { RivalDTO } from "../types/RivalDTO";
 import type { CreateScrimDTO } from "../types/CreateScrimDTO";

@@ -1,7 +1,7 @@
 import type { CreateUserDTO } from '../types/CreateUserDTO';
 import type { LoginUserDTO } from '../types/LoginUserDTO';
 import { API_URL } from '@/core/utils/API_URL';
-const api = "https://lolhubmexico.onrender.com";
+
 
 
 export const registerUser = async (user: CreateUserDTO) => {

@@ -1,7 +1,7 @@
-import React,{ useEffect, useState } from "react";
-import { useUser } from "@/context/UserContext";
+import React from "react";
+
 import type { ScrimEnriched } from "../types/ScrimEnriched";
-import { getActiveScrimsByUser, getScrimEnriched } from "../services/ScrimService";
+
 
 interface ScrimPreviewTeamsProps {
   scrim: ScrimEnriched;
@@ -11,8 +11,6 @@ interface ScrimPreviewTeamsProps {
 const ScrimPreviewTeams: React.FC<ScrimPreviewTeamsProps> = ({ scrim, onClick }) => {
     // const [activeScrims, setActiveScrims] = useState<ScrimEnriched[]>([]);
     // const [loading, setLoading] = useState(true);
-    const { user } = useUser();
-
     // useEffect(() => {
     //     const loadScrims = async () => {
     //         if (!user?.idUser) return;

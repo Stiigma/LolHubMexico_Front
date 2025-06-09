@@ -34,8 +34,13 @@ const LoginPage: React.FC = () => {
         idUser: result.user.idUser,
         userName: result.user.userName,
         email: result.user.email,
+        fullName: result.user.fullName,
+        phoneNumber: result.user.phoneNumber,
+        nacionality: result.user.nacionality,
+        fechaRegistro: result.user.fechaRegistro,
         role: result.user.role,
         token: result.token,
+        profileImage: result.user.profileImage || "/assets/avatars/avatar1.png",
       };
 
       setUser(user);

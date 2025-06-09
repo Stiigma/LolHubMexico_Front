@@ -1,6 +1,5 @@
 import axios from "axios";
 import { API_URL } from "@/core/utils/API_URL";
-import { User } from "lucide-react";
 import type { UserDTO } from "@/shared/types/User/UserDTO";
 
 export const getUserById = async (idUser: number) => {

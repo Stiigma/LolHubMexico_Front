@@ -3,8 +3,6 @@ import type { TeamInvitationDTO } from "../types/TeamInvitations";
 import type { JoinTeamDTO } from "../types/JoinTeamDTO";
 import { API_URL } from "@/core/utils/API_URL";
 
-const API_URL2 = "https://lolhubmexico.onrender.com/api/TeamInvitation";
-
 export const getMyInvitations = async (idUser: number): Promise<TeamInvitationDTO[]> => {
   const response = await axios.get(`${API_URL}/api/TeamInvitation/my-invite`, {
     params: { idUser },

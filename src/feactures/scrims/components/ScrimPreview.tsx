@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/context/UserContext";
-import type { ScrimEnriched } from "../types/ScrimEnriched";
 import type { IScrimPreview } from "../types/ScrimPreview";
 import UserInfoCard from "./UserInfoCard";
 import type { LinkUser } from "@/feactures/user/types/LinkUser";

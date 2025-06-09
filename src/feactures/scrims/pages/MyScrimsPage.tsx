@@ -8,7 +8,7 @@ import ScrimPreviewTeams from "../components/ScrimPreviewTeams";
 const MyScrimsPage: React.FC = () => {
   const navigate = useNavigate();
   const [activeScrims, setActiveScrims] = useState<ScrimEnriched[]>([]);
-  const [completedScrims, setCompletedScrims] = useState<ScrimEnriched[]>([]);
+  //const [completedScrims, setCompletedScrims] = useState<ScrimEnriched[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useUser();
 
@@ -76,7 +76,7 @@ const MyScrimsPage: React.FC = () => {
 
       <h2 className="text-3xl font-bold mb-4">Historial de Scrims</h2>
 
-      {completedScrims.length === 0 ? (
+      {/* {completedScrims.length === 0 ? (
         <p className="text-gray-400">No tienes scrims completados.</p>
       ) : (
         <div className="space-y-4">
@@ -93,7 +93,7 @@ const MyScrimsPage: React.FC = () => {
             </div>
           ))}
         </div>
-      )}
+      )} */}
     </div>
   );
 };

@@ -21,11 +21,11 @@ const MyTournamentsPage: React.FC = () => {
     },
   ];
 
-  const statusColor = {
-    'En progreso': 'text-blue-400',
-    'Finalizado': 'text-green-400',
-    'Pendiente': 'text-yellow-400',
-  };
+  // const statusColor = {
+  //   'En progreso': 'text-blue-400',
+  //   'Finalizado': 'text-green-400',
+  //   'Pendiente': 'text-yellow-400',
+  // };
 
   return (
     <div className="text-white px-8 py-6">
@@ -43,9 +43,9 @@ const MyTournamentsPage: React.FC = () => {
               <div>
                 <h3 className="text-xl font-bold mb-1">{tournament.name}</h3>
                 <p className="text-sm text-gray-400">📅 {tournament.date}</p>
-                <p className={`text-sm font-semibold ${statusColor[tournament.status]}`}>
+                {/* <p className={`text-sm font-semibold ${statusColor[tournament.status]}`}>
                   Estado: {tournament.status}
-                </p>
+                </p> */}
               </div>
 
               <div className="flex gap-2">

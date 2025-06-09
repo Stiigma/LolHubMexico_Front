@@ -1,7 +1,6 @@
 import React from "react";
 
-const months = ["Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May"];
-const days = ["Mon", "Wed", "Fri"];
+
 
 // Genera datos falsos (puedes adaptarlo a tus scrims reales)
 const generateData = () => {

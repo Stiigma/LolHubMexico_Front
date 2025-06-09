@@ -8,4 +8,5 @@ export interface UserDTO {
   fechaRegistro: Date;
   role: number;
   token: string;
+  profileImage?: string;
 }
