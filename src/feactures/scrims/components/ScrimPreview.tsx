@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { ScrimEnriched } from "../types/ScrimEnriched";
 import type { IScrimPreview } from "../types/ScrimPreview";
 import UserInfoCard from "./UserInfoCard";
@@ -8,6 +9,7 @@ import { getScrimPlayers } from "../services/ScrimService";
 const ScrimPreview: React.FC<IScrimPreview> = ({ scrimEnriched, isOpen, onClose }) => {
   const [players, setPlayers] = useState<LinkUser[]>([]);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPlayers = async () => {
@@ -33,6 +35,10 @@ const ScrimPreview: React.FC<IScrimPreview> = ({ scrimEnriched, isOpen, onClose 
   if (!isOpen) return null;
 
   const fechaFormateada = new Date(scrimEnriched.scrimPDTO.scheduled_date).toLocaleString("es-MX");
+
+  const handleJoinScrim = () => {
+    navigate(`/scrims/${scrimEnriched.scrimPDTO.idScrim}`);
+  };
 
   return (
     <div
@@ -83,6 +89,16 @@ const ScrimPreview: React.FC<IScrimPreview> = ({ scrimEnriched, isOpen, onClose 
               ))
             )}
           </div>
+        </div>
+
+        {/* BOTÓN ENTRAR A SCRIM */}
+        <div className="mt-6 text-center">
+          <button
+            onClick={handleJoinScrim}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded transition"
+          >
+            Entrar a Scrim
+          </button>
         </div>
       </div>
     </div>
