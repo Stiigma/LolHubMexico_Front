@@ -74,6 +74,7 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
     console.log(success);
     if (success) {
       alert("Scrim creada correctamente ✅");
+      
       onClose(); // cerrar modal
     } else {
       alert("Error al crear la scrim ❌");
