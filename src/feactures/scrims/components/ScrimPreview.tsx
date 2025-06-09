@@ -7,33 +7,45 @@ import UserInfoCard from "./UserInfoCard";
 import type { LinkUser } from "@/feactures/user/types/LinkUser";
 import { getScrimPlayers } from "../services/ScrimService";
 import type { RivalDTO } from "../types/RivalDTO";
-import { acceptScrim } from "../services/ScrimService";
+import { acceptScrim, isMyScrim } from "../services/ScrimService";
+import { getMyTeam } from "@/feactures/teams/services/teamService";
 
 const ScrimPreview: React.FC<IScrimPreview> = ({ scrimEnriched, isOpen, onClose }) => {
   const [players, setPlayers] = useState<LinkUser[]>([]);
   const [loading, setLoading] = useState(false);
+  const [canJoin, setCanJoin] = useState<boolean>(false);
   const navigate = useNavigate();
   const user = useUser().user;
   useEffect(() => {
-    const fetchPlayers = async () => {
-      if (isOpen) {
+    const initializePreview = async () => {
+        if (!isOpen || !user) return;
+
         setLoading(true);
         try {
-          const result = await getScrimPlayers(
+        // Obtener jugadores del equipo 1
+        const result = await getScrimPlayers(
             scrimEnriched.scrimPDTO.idScrim,
             scrimEnriched.scrimPDTO.idTeam1
-          );
-          setPlayers(result);
+        );
+        setPlayers(result);
+
+        const myteam = await getMyTeam(user.idUser);
+
+        // Verificar si el usuario ya está en la scrim
+        const isUserInScrim = await isMyScrim(
+            scrimEnriched.scrimPDTO.idScrim,
+            myteam.idTeam,
+        );
+        setCanJoin(!isUserInScrim); // true solo si NO pertenece a ningún equipo de la scrim
         } catch (error) {
-          console.error("Error al cargar jugadores:", error);
+        console.error("Error en la carga de la scrim:", error);
         } finally {
-          setLoading(false);
+        setLoading(false);
         }
-      }
     };
 
-    fetchPlayers();
-  }, [isOpen, scrimEnriched.scrimPDTO.idScrim, scrimEnriched.scrimPDTO.idTeam1]);
+    initializePreview();
+    }, [isOpen, user, scrimEnriched.scrimPDTO.idScrim, scrimEnriched.scrimPDTO.idTeam1]);
 
   if (!isOpen) return null;
 
@@ -111,14 +123,16 @@ const ScrimPreview: React.FC<IScrimPreview> = ({ scrimEnriched, isOpen, onClose 
         </div>
 
         {/* BOTÓN ENTRAR A SCRIM */}
-        <div className="mt-6 text-center">
-          <button
-            onClick={handleJoinScrim}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded transition"
-          >
-            Entrar a Scrim
-          </button>
-        </div>
+        {canJoin && (
+            <div className="mt-6 text-center">
+                <button
+                onClick={handleJoinScrim}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded transition"
+                >
+                Entrar a Scrim
+                </button>
+            </div>
+            )}
       </div>
     </div>
   );

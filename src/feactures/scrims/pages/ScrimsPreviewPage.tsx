@@ -86,8 +86,10 @@ export default function ScrimsPreviewPage() {
                   onClick={() => openPreviewModal(scrim)}
                   className="bg-[#1F2937] hover:bg-[#374151] transition rounded-xl p-6 shadow-md cursor-pointer"
                 >
-                  <h3 className="text-xl font-bold">Equipo 1: {scrim.teamName1}</h3>
-                  <p className="text-sm text-gray-300 mb-2">{scrim.descripcion}</p>
+                  <h3 className="text-xl font-bold mb-2 ">{scrim.scrimPDTO.tittle}</h3>
+                  <p className="text-sm text-gray-300 mb-2">Creada por: {scrim.createdby}</p>
+                  <p className="text-sm text-gray-300 mb-2">Team: {scrim.teamName1}</p>
+                  <p className="text-sm text-gray-300 mb-2">{scrim.scrimPDTO.description}</p>
                   <p className="text-sm text-gray-400">
                     Fecha: {new Date(scrim.scrimPDTO.scheduled_date).toLocaleString("es-MX")}
                   </p>

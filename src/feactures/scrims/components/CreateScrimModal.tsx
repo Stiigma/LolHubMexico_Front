@@ -1,25 +1,13 @@
-import {  getMyTeam, getTeambyId, getTeamMembers, getTeamMembersEnriched } from "@/feactures/teams/services/teamService";
-import React, { useState , useEffect} from "react";
-import type { CreateScrimDTO } from "../types/CreateScrimDTO";
+import React, { useState, useEffect } from "react";
+import { getMyTeam, getTeambyId, getTeamMembersEnriched } from "@/feactures/teams/services/teamService";
 import { useUser } from "@/context/UserContext";
-import type { UserDTO } from "@/shared/types/User/UserDTO";
 import { createScrim } from "../services/ScrimService";
+import type { CreateScrimDTO } from "../types/CreateScrimDTO";
 import type { PlayerDTO } from "@/feactures/user/types/PlayerDTO";
 
 interface Props {
   onClose: () => void;
 }
-
-const jugadoresMock = [
-  { id: 101, name: "Jugador1" },
-  { id: 102, name: "Jugador2" },
-  { id: 103, name: "Jugador3" },
-  { id: 104, name: "Jugador4" },
-  { id: 105, name: "Jugador5" },
-  { id: 106, name: "Jugador6" },
-  { id: 107, name: "Jugador7" },
-  { id: 108, name: "Jugador8" },
-];
 
 const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
   const [title, setTitle] = useState("");
@@ -27,10 +15,14 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [players, setPlayers] = useState<number[]>([]);
-  const [currentUser, setCurrentUser] = useState<UserDTO | null>(null);
   const [availablePlayers, setAvailablePlayers] = useState<PlayerDTO[]>([]);
   const [loadingPlayers, setLoadingPlayers] = useState(true);
-  const { user } = useUser(); 
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [search, setSearch] = useState("");
+  const [foundTeam, setFoundTeam] = useState<any | null>(null);
+  const [idTeam2, setIdTeam2] = useState<number>(0);
+
+  const { user } = useUser();
 
   const togglePlayer = (id: number) => {
     if (players.includes(id)) {
@@ -49,27 +41,22 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isFormValid) return;
-
-    if (!user) {
-      alert("No se encontró información del usuario.");
-      return;
-    }
+    if (!isFormValid || !user) return;
 
     const team = await getMyTeam(user.idUser);
-
-    const scheduled_date = new Date(`${date}T${time}:00`).toISOString(); // Formateo correcto
+    const scheduled_date = new Date(`${date}T${time}:00`).toISOString();
 
     const dto: CreateScrimDTO = {
-      created_by: user.idUser, // desde contexto o props
-      idTeam1: team.idTeam,     // desde contexto o props
-      idTeam2: 0,               // aún no definido
+      created_by: user.idUser,
+      idTeam1: team.idTeam,
+      idTeam2: idTeam2,
       scheduled_date,
-      idsUsers: players, // Asumiendo que cada jugador tiene idUser
+      idsUsers: players,
+      description,
+      tittle: title,
     };
 
     const success = await createScrim(dto);
-
     if (success) {
       alert("Scrim creada correctamente ✅");
       onClose(); // cerrar modal
@@ -77,26 +64,35 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
       alert("Error al crear la scrim ❌");
     }
   };
+
+  const handleTeamSearch = async () => {
+    try {
+      const team = await getTeambyId(search);
+      setFoundTeam(team);
+      setIdTeam2(team.idTeam);
+    } catch (error) {
+      setFoundTeam(null);
+      setIdTeam2(0); // no se encontró ningún equipo
+      console.error("Equipo no encontrado");
+    }
+  };
+
   useEffect(() => {
     const fetchPlayers = async () => {
       if (!user) return;
-
       try {
         const team = await getMyTeam(user.idUser);
         const members = await getTeamMembersEnriched(team.idTeam);
-
-        const onlyPlayers = members
-          .map(m => m.player!); // ! porque ya filtramos los nulls
-
+        const onlyPlayers = members.map(m => m.player!);
         setAvailablePlayers(onlyPlayers);
+        setLoadingPlayers(false);
       } catch (error) {
         console.error("Error al obtener jugadores del equipo:", error);
+        setLoadingPlayers(false);
       }
     };
-
     fetchPlayers();
   }, [user]);
-
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -114,9 +110,7 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-sm font-medium text-white mb-1">
-              Título del scrim
-            </label>
+            <label className="block text-sm font-medium text-white mb-1">Título del scrim</label>
             <input
               type="text"
               value={title}
@@ -127,9 +121,7 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white mb-1">
-              Descripción
-            </label>
+            <label className="block text-sm font-medium text-white mb-1">Descripción</label>
             <textarea
               rows={3}
               value={description}
@@ -141,9 +133,7 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
 
           <div className="flex gap-4">
             <div className="w-1/2">
-              <label className="block text-sm font-medium text-white mb-1">
-                Fecha
-              </label>
+              <label className="block text-sm font-medium text-white mb-1">Fecha</label>
               <input
                 type="date"
                 value={date}
@@ -153,9 +143,7 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
             </div>
 
             <div className="w-1/2">
-              <label className="block text-sm font-medium text-white mb-1">
-                Hora
-              </label>
+              <label className="block text-sm font-medium text-white mb-1">Hora</label>
               <input
                 type="time"
                 value={time}
@@ -166,9 +154,7 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
-              Selecciona 5 jugadores
-            </label>
+            <label className="block text-sm font-medium text-white mb-2">Selecciona 5 jugadores</label>
             <div className="grid grid-cols-2 gap-2">
               {availablePlayers.map((player) => (
                 <button
@@ -189,6 +175,20 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
           </div>
 
           <button
+            type="button"
+            onClick={() => setShowInviteModal(true)}
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-md transition"
+          >
+            Invitar equipo (opcional)
+          </button>
+
+          {idTeam2 > 0 && (
+            <p className="text-sm text-green-400 text-center">
+              Equipo rival seleccionado: ID #{idTeam2}
+            </p>
+          )}
+
+          <button
             type="submit"
             disabled={!isFormValid}
             className={`w-full ${
@@ -198,10 +198,59 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
             Publicar Scrim
           </button>
         </form>
+
+        {/* MODAL INVITAR EQUIPO */}
+        {showInviteModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+            <div className="bg-[#1e3a5f] w-full max-w-sm p-6 rounded-xl relative text-white">
+              <button
+                className="absolute top-3 right-3 text-white"
+                onClick={() => setShowInviteModal(false)}
+              >
+                ✕
+              </button>
+              <h3 className="text-lg font-bold mb-4">Buscar equipo rival (opcional)</h3>
+
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Nombre del equipo"
+                className="w-full px-4 py-2 mb-2 rounded bg-[#112a46] focus:outline-none"
+              />
+
+              <button
+                onClick={handleTeamSearch}
+                className="bg-green-500 hover:bg-green-600 w-full py-2 rounded mb-4"
+              >
+                Buscar
+              </button>
+
+              {foundTeam ? (
+                <div className="bg-[#0e213a] p-4 rounded text-center">
+                  <p className="font-semibold">{foundTeam.name}</p>
+                  <button
+                    onClick={() => {
+                      setIdTeam2(foundTeam.idTeam);
+                      setShowInviteModal(false);
+                    }}
+                    className="mt-3 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded"
+                  >
+                    Invitar este equipo
+                  </button>
+                </div>
+              ) : (
+                <p className="text-sm text-gray-300">No se ha encontrado ningún equipo. Se asignará ninguno.</p>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
 export default CreateScrimModal;
+
+
 
