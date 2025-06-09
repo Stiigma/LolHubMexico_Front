@@ -128,15 +128,15 @@ export const getScrimDetailFull = async (idScrim: number): Promise<ScrimDetail |
       allStats.map(async (stat) => {
         const [user, player] = await Promise.all([
           getUserById(stat.idUser),
-          getPlayerById(stat.idPlayer),
+          getPlayerById(stat.idUser),
         ]);
-
+        
         return {
           ...stat,
           userName: user?.userName || "Desconocido",
-          summonerName: player?.summoner_name || "?",
-          profilePicture: player?.profile_picture || "/default-avatar.png",
-          carril: player?.main_role || "?",
+          summonerName: player?.summonerName || "?",
+          profilePicture: player?.profilePicture || "/default-avatar.png",
+          carril: player?.mainRole || "?",
         };
       })
     );
@@ -144,7 +144,8 @@ export const getScrimDetailFull = async (idScrim: number): Promise<ScrimDetail |
     // Filtrar por equipo
     const team1Players = enrichedPlayers.filter(p => p.idTeam === scrim.idTeam1);
     const team2Players = enrichedPlayers.filter(p => p.idTeam === scrim.idTeam2);
-
+    console.log(team1Players);
+    console.log(team2Players);
     // Devolver la estructura completa
     return {
       scrim,
@@ -167,6 +168,7 @@ export const getScrimPlayerStats = async (idScrim: number) => {
     const response = await axios.get(`${API_URL}/api/Scrim/details/by-id`, {
       params: { idScrim },
     });
+    console.log(response.data)
     return response.data;
   } catch (error) {
     console.error("Error al obtener estadísticas de los jugadores del scrim:", error);
