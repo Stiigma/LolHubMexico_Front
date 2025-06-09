@@ -14,6 +14,18 @@ interface CreateTeamDTO {
 
 }
 
+export const getAllTeams = async (): Promise<Team[]> => {
+  const { data } = await axios.get<Team[]>(
+    `${API_URL}/api/Team/all`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return data;
+}
+
 export const createTeam = async (data: CreateTeamDTO) => {
     console.log("Servicio...");
   const response = await axios.post(`${API_URL}/api/Team/create-team`, data, {
@@ -61,8 +73,6 @@ export const getTeambyId = async (idTeam: number): Promise<Team> => {
     throw error;
   }
 };
-
-
 
 
 export const getTeamMembers = async (idTeam: number): Promise<TeamMemberDTO[]> => {
