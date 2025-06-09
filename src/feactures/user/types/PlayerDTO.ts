@@ -3,7 +3,7 @@
 export interface PlayerDTO {
   idPlayer: number;
   idUser: number;
-  mainRole: string;
+  role: number;
   summonerName: string;
   level: number;
   profilePicture: string;
