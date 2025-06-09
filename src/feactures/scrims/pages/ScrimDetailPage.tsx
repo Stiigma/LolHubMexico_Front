@@ -29,11 +29,13 @@ const ScrimDetailPage: React.FC = () => {
         <TeamStatsPanel
           teamName={scrimDetail.team1Name}
           teamLogo={scrimDetail.team1Logo}
+          scrim={scrimDetail.scrim}
           players={scrimDetail.team1Players}
         />
         <TeamStatsPanel
           teamName={scrimDetail.team2Name}
           teamLogo={scrimDetail.team2Logo}
+          scrim={scrimDetail.scrim}
           players={scrimDetail.team2Players}
         />
       </div>

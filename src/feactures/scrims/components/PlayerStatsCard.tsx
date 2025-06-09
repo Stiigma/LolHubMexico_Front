@@ -1,7 +1,12 @@
 import React from "react";
 import type { PlayerStats } from "@/feactures/user/types/PlayerStats";
 
-const PlayerStatsCard: React.FC<{ player: PlayerStats }> = ({ player }) => {
+interface PlayerStatsCardProps {
+  player: PlayerStats;
+  scrimStatus: number; // puede ser 2 o 3
+}
+
+const PlayerStatsCard: React.FC<PlayerStatsCardProps> = ({ player, scrimStatus }) => {
   const itemIcons = player.items.split(",").map((item, index) => (
     <img
       key={index}
@@ -22,23 +27,32 @@ const PlayerStatsCard: React.FC<{ player: PlayerStats }> = ({ player }) => {
         <div>
           <p className="font-bold text-base">{player.userName}</p>
           <p className="text-sm text-gray-600">Invocador: {player.summonerName}</p>
-          <p className="text-sm text-gray-500">Campeón: {player.championName}</p>
-          <p className="text-sm text-gray-500">Carril: {player.carril}</p>
+          {scrimStatus === 2 && (
+            <p className="text-sm text-blue-500 mt-1">En espera de resultados...</p>
+          )}
+          {scrimStatus === 3 && (
+            <>
+              <p className="text-sm text-gray-500">Campeón: {player.championName}</p>
+              <p className="text-sm text-gray-500">Carril: {player.carril}</p>
+            </>
+          )}
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1 text-sm text-gray-700 flex-1">
-        <p><strong>Nivel:</strong> {player.nivel}</p>
-        <p><strong>KDA:</strong> {player.kills}/{player.deaths}/{player.assists}</p>
-        <p><strong>Oro:</strong> {player.goldEarned}</p>
-        <p><strong>Farm:</strong> {player.farm}</p>
-        <p><strong>Visión:</strong> {player.visionScore}</p>
-        <p><strong>Daño equipo:</strong> {player.teamDamagePercentage}</p>
-        <div className="col-span-2 sm:col-span-3 flex items-center gap-2 mt-2">
-          <span className="font-semibold">Ítems:</span>
-          <div className="flex gap-1">{itemIcons}</div>
+      {scrimStatus === 3 && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1 text-sm text-gray-700 flex-1">
+          <p><strong>Nivel:</strong> {player.nivel}</p>
+          <p><strong>KDA:</strong> {player.kills}/{player.deaths}/{player.assists}</p>
+          <p><strong>Oro:</strong> {player.goldEarned}</p>
+          <p><strong>Farm:</strong> {player.farm}</p>
+          <p><strong>Visión:</strong> {player.visionScore}</p>
+          <p><strong>Daño equipo:</strong> {player.teamDamagePercentage}</p>
+          <div className="col-span-2 sm:col-span-3 flex items-center gap-2 mt-2">
+            <span className="font-semibold">Ítems:</span>
+            <div className="flex gap-1">{itemIcons}</div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

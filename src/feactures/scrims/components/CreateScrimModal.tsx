@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { getMyTeam, getTeambyId, getTeamMembersEnriched } from "@/feactures/teams/services/teamService";
+import { getMyTeam, getTeambyId, getTeamMembersEnriched, searchTeamsByName } from "@/feactures/teams/services/teamService";
 import { useUser } from "@/context/UserContext";
 import { createScrim } from "../services/ScrimService";
 import type { CreateScrimDTO } from "../types/CreateScrimDTO";
 import type { PlayerDTO } from "@/feactures/user/types/PlayerDTO";
 import type { UserDTO } from "@/shared/types/User/UserDTO";
+import type { TeamSearchDTO } from "./TeamSearchDTO";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   onClose: () => void;
@@ -20,8 +22,9 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
   const [loadingPlayers, setLoadingPlayers] = useState(true);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [search, setSearch] = useState("");
-  const [foundTeam, setFoundTeam] = useState<any | null>(null);
+  const [foundTeams, setFoundTeams] = useState<TeamSearchDTO[]>([]);
   const [idTeam2, setIdTeam2] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const { user } = useUser();
 
@@ -38,8 +41,7 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
     description.trim() !== "" &&
     date !== "" &&
     time !== "" &&
-    players.length === 5 &&
-    idTeam2 !== null;
+    players.length === 5;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,7 +53,7 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
     const dto: CreateScrimDTO = {
       created_by: user.idUser,
       idTeam1: team.idTeam,
-      idTeam2: idTeam2!,
+      idTeam2: idTeam2 ?? 0,
       scheduled_date,
       idsUsers: players,
       description,
@@ -61,6 +63,7 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
     const success = await createScrim(dto);
     if (success) {
       alert("Scrim creada correctamente ✅");
+      navigate("/scrims/mine");
       onClose(); // cerrar modal
     } else {
       alert("Error al crear la scrim ❌");
@@ -69,11 +72,11 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
 
   const handleTeamSearch = async () => {
     try {
-      const team = await getTeambyId(search);
-      setFoundTeam(team);
+      const teams = await searchTeamsByName(search); // ahora devuelve lista
+      setFoundTeams(teams);
     } catch (error) {
-      setFoundTeam(null);
-      console.error("Equipo no encontrado");
+      setFoundTeams([]);
+      console.error("Equipos no encontrados", error);
     }
   };
 
@@ -187,14 +190,14 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
           )}
 
           <button
-            type="submit"
-            disabled={!isFormValid}
-            className={`w-full ${
-              isFormValid ? "bg-green-500 hover:bg-green-600" : "bg-gray-500 cursor-not-allowed"
-            } text-white font-semibold py-2 rounded-md transition`}
-          >
-            Publicar Scrim
-          </button>
+          type="submit"
+          disabled={!isFormValid}
+          className={`w-full ${
+            isFormValid ? "bg-green-500 hover:bg-green-600" : "bg-gray-500 cursor-not-allowed"
+          } text-white font-semibold py-2 rounded-md transition`}
+        >
+          Publicar Scrim
+        </button>
         </form>
 
         {/* MODAL INVITAR EQUIPO */}
@@ -224,19 +227,21 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
                 Buscar
               </button>
 
-              {foundTeam ? (
-                <div className="bg-[#0e213a] p-4 rounded text-center">
-                  <p className="font-semibold">{foundTeam.name}</p>
-                  <button
-                    onClick={() => {
-                      setIdTeam2(foundTeam.idTeam);
-                      setShowInviteModal(false);
-                    }}
-                    className="mt-3 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded"
-                  >
-                    Invitar este equipo
-                  </button>
-                </div>
+              {foundTeams.length > 0 ? (
+                foundTeams.map((team) => (
+                  <div key={team.idTeam} className="bg-[#0e213a] p-4 rounded text-center">
+                    <p className="font-semibold">{team.teamName}</p>
+                    <button
+                      onClick={() => {
+                        setIdTeam2(team.idTeam);
+                        setShowInviteModal(false);
+                      }}
+                      className="mt-3 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white"
+                    >
+                      Invitar este equipo
+                    </button>
+                  </div>
+                ))
               ) : (
                 <p className="text-sm text-gray-300">No se ha encontrado ningún equipo.</p>
               )}

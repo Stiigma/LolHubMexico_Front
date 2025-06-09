@@ -1,13 +1,15 @@
 import React from "react";
 import type { PlayerStats } from "@/feactures/user/types/PlayerStats";
 import PlayerStatsCard from "../components/PlayerStatsCard";
+import type { ScrimPDTO } from "../types/ScrimPDTO";
 interface TeamStatsPanelProps {
   teamName: string;
   teamLogo: string;
+  scrim: ScrimPDTO
   players: PlayerStats[];
 }
 
-const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ teamName, teamLogo, players }) => {
+const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ teamName, teamLogo, players, scrim }) => {
   return (
     <div className="w-full">
       <div className="flex items-center gap-4 mb-4">
@@ -22,7 +24,7 @@ const TeamStatsPanel: React.FC<TeamStatsPanelProps> = ({ teamName, teamLogo, pla
       <div className="flex flex-col gap-4">
         {players.map((player) => (
           <div key={player.userName}>
-            <PlayerStatsCard player={player} />
+            <PlayerStatsCard player={player} scrimStatus={scrim.status} />
           </div>
         ))}
       </div>

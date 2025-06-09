@@ -5,6 +5,7 @@ import type { TeamMemberDTO, TeamMember } from "../types/TeamMemberDTO";
 import { getUserById } from "@/feactures/user/services/userService";
 import { getPlayerById } from "@/feactures/user/services/userService";
 import { API_URL } from '@/core/utils/API_URL';
+import type { TeamSearchDTO } from "@/feactures/scrims/components/TeamSearchDTO";
 
 const API_URL2 = "https://lolhubmexico.onrender.com/api/Team";
 
@@ -71,6 +72,19 @@ export const getTeambyId = async (idTeam: number): Promise<Team> => {
   } catch (error) {
     console.error("Error al obtener el equipo:", error);
     throw error;
+  }
+};
+
+
+export const searchTeamsByName = async (query: string): Promise<TeamSearchDTO[]> => {
+  try {
+    const response = await axios.get(`${API_URL}/api/Team/search-teams`, {
+      params: { query },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al buscar equipos:", error);
+    return [];
   }
 };
 

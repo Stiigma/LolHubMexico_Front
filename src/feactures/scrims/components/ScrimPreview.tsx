@@ -9,11 +9,13 @@ import { getScrimPlayers } from "../services/ScrimService";
 import type { RivalDTO } from "../types/RivalDTO";
 import { acceptScrim, isMyScrim } from "../services/ScrimService";
 import { getMyTeam } from "@/feactures/teams/services/teamService";
+import ErrorAlert from "@/core/utils/ErrorAlert";
 
 const ScrimPreview: React.FC<IScrimPreview> = ({ scrimEnriched, isOpen, onClose }) => {
   const [players, setPlayers] = useState<LinkUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [canJoin, setCanJoin] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const user = useUser().user;
   useEffect(() => {
@@ -51,24 +53,39 @@ const ScrimPreview: React.FC<IScrimPreview> = ({ scrimEnriched, isOpen, onClose 
 
   const fechaFormateada = new Date(scrimEnriched.scrimPDTO.scheduled_date).toLocaleString("es-MX");
 
-  const handleJoinScrim = async () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+const handleJoinScrim = async () => {
     if (!user) {
-        alert("Debes iniciar sesión para unirte a una scrim.");
+        setErrorMessage("Debes iniciar sesión para unirte a una scrim.");
         return;
-        }
+    }
+
     const dto: RivalDTO = {
         idScrim: scrimEnriched.scrimPDTO.idScrim,
-        idRival: user?.idUser, // Ajusta según cómo obtienes el equipo del usuario
+        idRival: user.idUser,
         isAccept: true,
-        idsUsers: [user.idUser], 
+        idsUsers: [user.idUser],
     };
 
-    const success = await acceptScrim(dto);
-    if (success) {
-        navigate(`/scrims/mine`);
-    } else {
-        alert("Hubo un error al aceptar la scrim");
-    }
+   try {
+        setIsSubmitting(true);
+        await acceptScrim(dto); // ← aquí lanza el 400
+        navigate("/scrims/mine");
+        } catch (error: any) {
+        console.error("❌ Error al aceptar la scrim:", error);
+
+        // ⚠️ Validación segura con optional chaining
+        const msg =
+            error?.response?.data?.message ||
+            error?.message ||
+            "Ocurrió un error desconocido.";
+
+        console.log("Mensaje de error capturado:", msg);
+        setErrorMessage(msg);
+        } finally {
+        setIsSubmitting(false);
+        }
     };
 
   return (
@@ -121,18 +138,25 @@ const ScrimPreview: React.FC<IScrimPreview> = ({ scrimEnriched, isOpen, onClose 
             )}
           </div>
         </div>
+            {/* MENSAJE DE ERROR */}
+            {errorMessage && (
+            <div className="mt-4">
+                <ErrorAlert message={errorMessage} onClose={() => setErrorMessage("")} />
+            </div>
+            )}
 
-        {/* BOTÓN ENTRAR A SCRIM */}
-        {canJoin && (
+            {/* BOTÓN ENTRAR A SCRIM */}
+            {canJoin && (
             <div className="mt-6 text-center">
                 <button
                 onClick={handleJoinScrim}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded transition"
+                disabled={isSubmitting}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded transition disabled:opacity-50"
                 >
-                Entrar a Scrim
+                {isSubmitting ? "Cargando..." : "Entrar a Scrim"}
                 </button>
             </div>
-            )}
+)}
       </div>
     </div>
   );
