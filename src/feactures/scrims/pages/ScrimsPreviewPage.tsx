@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import CreateScrimModal from "../components/CreateScrimModal";
+import ScrimPreview from "../components/ScrimPreview";
 
 import { getAllScrimsEnriched } from "../services/ScrimService";
 import { useUser } from "@/context/UserContext";
@@ -8,10 +8,13 @@ import type { ScrimEnriched } from "../types/ScrimEnriched";
 
 export default function ScrimsPreviewPage() {
   const [showModal, setShowModal] = useState(false);
-  const [Scrims, setScrims] = useState<ScrimEnriched[]>([]);
+  const [scrims, setScrims] = useState<ScrimEnriched[]>([]);
   const { user } = useUser();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const [selectedScrim, setSelectedScrim] = useState<ScrimEnriched | null>(null);
+  const [previewModalOpen, setPreviewModalOpen] = useState(false);
 
   useEffect(() => {
     if (!user?.idUser) return;
@@ -25,7 +28,6 @@ export default function ScrimsPreviewPage() {
       .finally(() => setLoading(false));
   }, [user]);
 
-  // 🔧 Función auxiliar para traducir el status
   const getStatusInfo = (status: number) => {
     switch (status) {
       case 0:
@@ -37,6 +39,16 @@ export default function ScrimsPreviewPage() {
       default:
         return { text: "Desconocido", color: "bg-red-600" };
     }
+  };
+
+  const openPreviewModal = (scrim: ScrimEnriched) => {
+    setSelectedScrim(scrim);
+    setPreviewModalOpen(true);
+  };
+
+  const closePreviewModal = () => {
+    setPreviewModalOpen(false);
+    setSelectedScrim(null);
   };
 
   return (
@@ -62,27 +74,29 @@ export default function ScrimsPreviewPage() {
         {error && <p className="text-red-400 mb-4">{error}</p>}
         {loading ? (
           <p className="text-gray-300">Cargando scrims...</p>
-        ) : Scrims.length === 0 ? (
+        ) : scrims.length === 0 ? (
           <p className="text-gray-400">No hay scrims disponibles por ahora.</p>
         ) : (
           <div className="grid gap-6">
-            {Scrims.map((scrim) => {
+            {scrims.map((scrim) => {
               const statusInfo = getStatusInfo(scrim.scrimPDTO.status);
               return (
-                <Link to={`/scrims/${scrim.scrimPDTO.idScrim}`} key={scrim.scrimPDTO.idScrim}>
-                  <div className="bg-[#1F2937] hover:bg-[#374151] transition rounded-xl p-6 shadow-md">
-                    <h3 className="text-xl font-bold">Equipo 1: {scrim.teamName1}</h3>
-                    <p className="text-sm text-gray-300 mb-2">{scrim.descripcion}</p>
-                    <p className="text-sm text-gray-400">
-                      Fecha: {new Date(scrim.scrimPDTO.scheduled_date).toLocaleString("es-MX")}
-                    </p>
-                    <span
-                      className={`inline-block mt-3 px-3 py-1 rounded-full text-xs font-medium ${statusInfo.color}`}
-                    >
-                      {statusInfo.text}
-                    </span>
-                  </div>
-                </Link>
+                <div
+                  key={scrim.scrimPDTO.idScrim}
+                  onClick={() => openPreviewModal(scrim)}
+                  className="bg-[#1F2937] hover:bg-[#374151] transition rounded-xl p-6 shadow-md cursor-pointer"
+                >
+                  <h3 className="text-xl font-bold">Equipo 1: {scrim.teamName1}</h3>
+                  <p className="text-sm text-gray-300 mb-2">{scrim.descripcion}</p>
+                  <p className="text-sm text-gray-400">
+                    Fecha: {new Date(scrim.scrimPDTO.scheduled_date).toLocaleString("es-MX")}
+                  </p>
+                  <span
+                    className={`inline-block mt-3 px-3 py-1 rounded-full text-xs font-medium ${statusInfo.color}`}
+                  >
+                    {statusInfo.text}
+                  </span>
+                </div>
               );
             })}
           </div>
@@ -91,6 +105,11 @@ export default function ScrimsPreviewPage() {
 
       {/* Modal para crear Scrim */}
       {showModal && <CreateScrimModal onClose={() => setShowModal(false)} />}
+
+      {/* Modal de vista previa del scrim */}
+      {selectedScrim && (
+        <ScrimPreview scrimEnriched={selectedScrim} isOpen={previewModalOpen} onClose={closePreviewModal} />
+      )}
     </div>
   );
 }

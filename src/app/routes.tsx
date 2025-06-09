@@ -26,6 +26,7 @@ import InvitationsPageTournaments from "../feactures/tournaments/pages/Invitatio
 import CreateTournamentPage from "../feactures/tournaments/pages/CreateTournamentPage";
 import TournamentDetailPage from "../feactures/tournaments/pages/TournamentDetailPage";
 import EditTournamentPage from "../feactures/tournaments/pages/EditTournamentPage";
+import TournamentBracketPage from "../feactures/tournaments/pages/TournamentBracketPage"; // ✅ NUEVA RUTA
 
 // Scrims
 import ScrimsLayout from "../feactures/scrims/layout/ScrimsLayout";
@@ -109,6 +110,7 @@ const AppRoutes = () => {
         <Route path="create" element={<CreateTournamentPage />} />
         <Route path=":id" element={<TournamentDetailPage />} />
         <Route path=":id/edit" element={<EditTournamentPage />} />
+        <Route path=":id/bracket" element={<TournamentBracketPage />} /> {/* ✅ NUEVA RUTA */}
       </Route>
 
       {/* Scrims bajo MainLayout */}

@@ -4,6 +4,9 @@ import type { ScrimPDTO } from "../types/ScrimPDTO";
 import type { ScrimEnriched } from "../types/ScrimEnriched";
 import { getTeambyId } from "@/feactures/teams/services/teamService";
 import { getUserById } from "@/feactures/user/services/userService";
+import type { PlayerStats } from "@/feactures/user/types/PlayerStats";
+import type { ScrimDetail } from "../types/ScrimDetail";
+import type { RivalDTO } from "../types/RivalDTO";
 
 
 export const getScrimPending = async () => {
@@ -12,6 +15,17 @@ export const getScrimPending = async () => {
   });
   console.log(response.data)
   return response.data; // Asume que retorna { username, ... }
+};
+
+export const acceptScrim = async (dto: RivalDTO): Promise<boolean> => {
+  try {
+    const response = await axios.post(`${API_URL}/api/Scrim/accept-scrim`, dto);
+    console.log("Scrim aceptada correctamente:", response.data.IsAcccept);
+    return true;
+  } catch (error) {
+    console.error("Error al aceptar la scrim:", error);
+    return false;
+  }
 };
 
 export const getScrimEnriched = async (scrim: ScrimPDTO): Promise<ScrimEnriched | null> => {
@@ -63,3 +77,84 @@ export const getAllScrimsEnriched = async (): Promise<ScrimEnriched[]> => {
     return [];
   }
 };
+
+export const getScrimPlayers = async (idScrim: number, idTeam: number) => {
+  try {
+    const response = await axios.get(`${API_URL}/api/Scrim/get-Summoners-pending`, {
+      params: { idScrim, idTeam },
+    });
+    return response.data; // Lista de UserLinkDTO
+  } catch (error) {
+    console.error("Error al obtener jugadores del scrim:", error);
+    return [];
+  }
+};
+
+export const getScrimDetailFull = async (idScrim: number): Promise<ScrimDetail | null> => {
+  try {
+    // Obtener la scrim
+    const scrim = await getScrimById(idScrim);
+    if (!scrim) return null;
+
+    // Obtener info de los equipos
+    const [team1, team2] = await Promise.all([
+      getTeambyId(scrim.idTeam1),
+      getTeambyId(scrim.idTeam2),
+    ]);
+
+    if (!team1 || !team2) return null;
+
+    // Obtener todos los jugadores con sus stats
+    const allPlayers: any[] = await getScrimPlayerStats(idScrim);
+
+    // Filtrar por equipo
+    const team1Players = allPlayers.filter((p) => p.idTeam === scrim.idTeam1);
+    const team2Players = allPlayers.filter((p) => p.idTeam === scrim.idTeam2);
+
+    // Devolver la estructura completa
+    return {
+      scrim,
+      team1Name: team1.teamName,
+      team1Logo: team1.teamLogo,
+      team1Players,
+      team2Name: team2.teamName,
+      team2Logo: team2.teamLogo,
+      team2Players
+    };
+  } catch (error) {
+    console.error("Error al construir ScrimDetail:", error);
+    return null;
+  }
+};
+
+
+
+export const getScrimPlayerStats = async (idScrim: number) => {
+  try {
+    const response = await axios.get(`${API_URL}/api/Scrim/details/by-id`, {
+      params: { idScrim },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener estadísticas de los jugadores del scrim:", error);
+    return [];
+  }
+};
+
+
+export const getScrimById = async (idScrim: number): Promise<ScrimPDTO | null> => {
+  try {
+    const response = await axios.get(`${API_URL}/api/Scrim/by-id`, {
+      params: { idScrim },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener scrim por ID:", error);
+    return null;
+  }
+};
+
+
+
+
+

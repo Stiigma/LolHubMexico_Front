@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CreateTournamentModal from "../components/CreateTournamentModal"; // Asegúrate de tener este archivo creado
+import CreateTournamentModal from "../components/CreateTournamentModal";
 
 const tournaments = [
   {
@@ -33,13 +33,19 @@ const TournamentsPreviewPage: React.FC = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
+  const handleJoin = (id: number, status: string) => {
+    if (status === "Abierto") {
+      navigate(`/tournaments/${id}/bracket`);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0d1b2a] text-white px-6 py-12">
       <div className="flex justify-between items-center mb-10 max-w-6xl mx-auto">
         <h1 className="text-4xl font-extrabold">Torneos Activos</h1>
         <button
           className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded"
-          onClick={() => setShowModal(true)} // ✅ Usamos modal
+          onClick={() => setShowModal(true)}
         >
           Crear Torneo
         </button>
@@ -49,8 +55,7 @@ const TournamentsPreviewPage: React.FC = () => {
         {tournaments.map((tournament) => (
           <div
             key={tournament.id}
-            className="bg-[#112a46] rounded-xl overflow-hidden shadow hover:scale-105 transition cursor-pointer"
-            onClick={() => navigate(`/tournaments/${tournament.id}`)}
+            className="bg-[#112a46] rounded-xl overflow-hidden shadow-md hover:shadow-lg transition transform hover:scale-105"
           >
             <img
               src={tournament.image}
@@ -70,6 +75,21 @@ const TournamentsPreviewPage: React.FC = () => {
               >
                 {tournament.status}
               </span>
+
+              {/* Botón Participar */}
+              <div className="pt-2">
+                <button
+                  onClick={() => handleJoin(tournament.id, tournament.status)}
+                  disabled={tournament.status !== "Abierto"}
+                  className={`w-full px-4 py-2 mt-2 rounded font-semibold transition ${
+                    tournament.status === "Abierto"
+                      ? "bg-green-500 hover:bg-green-600 text-white"
+                      : "bg-gray-600 text-gray-300 cursor-not-allowed"
+                  }`}
+                >
+                  {tournament.status === "Abierto" ? "Participar" : "Cerrado"}
+                </button>
+              </div>
             </div>
           </div>
         ))}
@@ -82,5 +102,6 @@ const TournamentsPreviewPage: React.FC = () => {
 };
 
 export default TournamentsPreviewPage;
+
 
 
