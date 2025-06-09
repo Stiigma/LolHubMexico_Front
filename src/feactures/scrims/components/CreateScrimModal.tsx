@@ -4,7 +4,6 @@ import { useUser } from "@/context/UserContext";
 import { createScrim } from "../services/ScrimService";
 import type { CreateScrimDTO } from "../types/CreateScrimDTO";
 import type { PlayerDTO } from "@/feactures/user/types/PlayerDTO";
-import type { UserDTO } from "@/shared/types/User/UserDTO";
 
 interface Props {
   onClose: () => void;
@@ -21,7 +20,7 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [search, setSearch] = useState("");
   const [foundTeam, setFoundTeam] = useState<any | null>(null);
-  const [idTeam2, setIdTeam2] = useState<number | null>(null);
+  const [idTeam2, setIdTeam2] = useState<number>(0);
 
   const { user } = useUser();
 
@@ -38,8 +37,7 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
     description.trim() !== "" &&
     date !== "" &&
     time !== "" &&
-    players.length === 5 &&
-    idTeam2 !== null;
+    players.length === 5;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,7 +49,7 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
     const dto: CreateScrimDTO = {
       created_by: user.idUser,
       idTeam1: team.idTeam,
-      idTeam2: idTeam2!,
+      idTeam2: idTeam2,
       scheduled_date,
       idsUsers: players,
       description,
@@ -71,8 +69,10 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
     try {
       const team = await getTeambyId(search);
       setFoundTeam(team);
+      setIdTeam2(team.idTeam);
     } catch (error) {
       setFoundTeam(null);
+      setIdTeam2(0); // no se encontró ningún equipo
       console.error("Equipo no encontrado");
     }
   };
@@ -179,11 +179,13 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
             onClick={() => setShowInviteModal(true)}
             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-md transition"
           >
-            Invitar equipo
+            Invitar equipo (opcional)
           </button>
 
-          {idTeam2 && (
-            <p className="text-sm text-green-400 text-center">Equipo rival seleccionado: ID #{idTeam2}</p>
+          {idTeam2 > 0 && (
+            <p className="text-sm text-green-400 text-center">
+              Equipo rival seleccionado: ID #{idTeam2}
+            </p>
           )}
 
           <button
@@ -207,7 +209,7 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
               >
                 ✕
               </button>
-              <h3 className="text-lg font-bold mb-4">Buscar equipo rival</h3>
+              <h3 className="text-lg font-bold mb-4">Buscar equipo rival (opcional)</h3>
 
               <input
                 type="text"
@@ -238,7 +240,7 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
                   </button>
                 </div>
               ) : (
-                <p className="text-sm text-gray-300">No se ha encontrado ningún equipo.</p>
+                <p className="text-sm text-gray-300">No se ha encontrado ningún equipo. Se asignará ninguno.</p>
               )}
             </div>
           </div>
@@ -249,5 +251,6 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
 };
 
 export default CreateScrimModal;
+
 
 
