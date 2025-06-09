@@ -4,8 +4,9 @@ import { useUser } from "@/context/UserContext";
 import { createScrim } from "../services/ScrimService";
 import type { CreateScrimDTO } from "../types/CreateScrimDTO";
 import type { PlayerDTO } from "@/feactures/user/types/PlayerDTO";
-import type { UserDTO } from "@/shared/types/User/UserDTO";
 
+import { useNavigate } from "react-router-dom";
+import type { TeamSearchDTO } from "./TeamSearchDTO";
 interface Props {
   onClose: () => void;
 }
@@ -20,9 +21,9 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
   const [loadingPlayers, setLoadingPlayers] = useState(true);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [search, setSearch] = useState("");
-  const [foundTeam, setFoundTeam] = useState<any | null>(null);
+  const [foundTeams, setFoundTeam] = useState<TeamSearchDTO[]>([]);
   const [idTeam2, setIdTeam2] = useState<number | null>(null);
-
+  const navigate = useNavigate();
   const { user } = useUser();
 
   const togglePlayer = (id: number) => {
@@ -69,10 +70,10 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
 
   const handleTeamSearch = async () => {
     try {
-      const team = await getTeambyId(search);
+      const team = await searchTeamsByName(search);
       setFoundTeam(team);
     } catch (error) {
-      setFoundTeam(null);
+      setFoundTeam([]);
       console.error("Equipo no encontrado");
     }
   };
@@ -182,9 +183,9 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
             Invitar equipo (opcional)
           </button>
 
-          {idTeam2 > 0 && (
+          {idTeam2 && (
             <p className="text-sm text-green-400 text-center">
-              Equipo rival seleccionado: ID #{idTeam2}
+              Equipo rival seleccionado: ID #{idTeam2 ?? 0}
             </p>
           )}
 
