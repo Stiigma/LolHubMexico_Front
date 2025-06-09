@@ -1,4 +1,3 @@
-import React from "react";
 import { useUser } from "../../../context/UserContext";
 import { NavLink } from "react-router-dom";
 
@@ -10,11 +9,7 @@ const Header = () => {
     <header className="bg-[#0d1b2a] text-white shadow-md">
       <div className="max-w-screen-xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Botón izquierda */}
-        <div className="flex-1">
-          <button className="bg-[#10b981] hover:bg-[#34d399] text-white text-sm px-4 py-2 rounded transition font-semibold">
-            Conectar cuenta Riot
-          </button>
-        </div>
+        <div className="flex-1"></div>
 
         {/* Navegación centrada */}
         <nav className="flex-1 flex justify-center space-x-10 text-sm font-semibold">
