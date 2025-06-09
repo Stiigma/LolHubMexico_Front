@@ -4,4 +4,6 @@ export interface ScrimPDTO{
     idTeam2: number;
     scheduled_date: Date;
     status: number;
+    description: string;
+    tittle: string;
 }
