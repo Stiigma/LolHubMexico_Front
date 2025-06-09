@@ -1,77 +1,44 @@
-// src/data/teams.ts
-export type Team = {
-  id: number;
-  name: string;
-  logo: string;
-  banner: string;
-  description: string;
-  createdAT: string;
-  stats: { games: number; wins: number; losses: number; draws: number };
-  socials: { name: 'youtube' | 'twitch' | 'chat'; url: string }[];
-  players: { id: number; name: string; role: string; avatar: string }[];
-};
+// src/shared/data/teams.ts
 
-export const teams: Team[] = [
-  {
-    id: 1,
-    name: 'Dark Passage',
-    logo: new URL('../../assets/teamsassets/team1.png', import.meta.url).href,
-    banner: new URL('../../assets/teamassets/banner.png', import.meta.url).href,
-    description:
-      'Enim et faucibus maximus, nulla massa finibus arcu, ornare euismod…',
-    createdAT: '12-12-2024',
-    stats: { games: 12, wins: 8, losses: 2, draws: 2 },
-    socials: [
-      { name: 'youtube', url: '#' },
-      { name: 'twitch', url: '#' },
-      { name: 'chat', url: '#' },
-    ],
-    players: [
-      { id: 1, name: 'Stiigma', role: 'Top', avatar: '../../assets/teamsassets/team1.png' },
-      { id: 2, name: 'Flaeyy', role: 'Jungle', avatar: '../../assets/teamsassets/team1.png' },
-      { id: 3, name: 'Zonet', role: 'Mid', avatar: '../../assets/teamsassets/team1.png' },
-      // …
-    ],
-  },
-  {
-    id: 2,
-    name: 'Force of Nature',
-    logo: new URL('../../assets/teamsassets/team1.png', import.meta.url).href,
-    banner: new URL('../../assets/teamassets/banner.png', import.meta.url).href,
-    description:
-      'Enim et faucibus maximus, nulla massa finibus arcu, ornare euismod…',
-    createdAT: '12-12-2024',
-    stats: { games: 12, wins: 8, losses: 2, draws: 2 },
-    socials: [
-      { name: 'youtube', url: '#' },
-      { name: 'twitch', url: '#' },
-      { name: 'chat', url: '#' },
-    ],
-    players: [
-      { id: 1, name: 'Shadow', role: 'Top', avatar: '/assets/teams/team2.png' },
-      { id: 2, name: 'Viper', role: 'Jungle', avatar: '/assets/teams/team2.png' },
-      // …
-    ],
-  },
-  {
-    id: 3,
-    name: 'Attax',
-    logo: new URL('../../assets/teamsassets/team1.png', import.meta.url).href,
-    banner: new URL('../../assets/teamassets/banner.png', import.meta.url).href,
-    description:
-      'Enim et faucibus maximus, nulla massa finibus arcu, ornare euismod…',
-    createdAT: '12-12-2024',
-    stats: { games: 12, wins: 8, losses: 2, draws: 2 },
-    socials: [
-      { name: 'youtube', url: '#' },
-      { name: 'twitch', url: '#' },
-      { name: 'chat', url: '#' },
-    ],
-    players: [
-      { id: 1, name: 'Shadow', role: 'Top', avatar: '/assets/teams/team3.png' },
-      { id: 2, name: 'Viper', role: 'Jungle', avatar: '/assets/teams/team3.png' },
-      // …
-    ],
-  },
-  // más equipos…
-];
+/**
+ * Esta interfaz refleja sólo lo que tu UI necesita de momento.
+ * Si en el futuro quieres mostrar banner, stats o jugadores,
+ * debes descomentar y rellenar estas propiedades.
+ */
+export interface Team {
+  id: string;
+  name: string;
+  logoUrl: string;
+  status: 'Abierto' | 'Cerrado';
+
+  // Opcionales, para cuando los necesites:
+  // bannerUrl?: string;
+  // description?: string;
+  // creationDate?: string;
+  // captainId?: number;
+  // stats?: {
+  //   games: number;
+  //   wins: number;
+  //   losses: number;
+  //   draws: number;
+  // };
+  // socials?: { name: 'youtube' | 'twitch' | 'chat'; url: string }[];
+  // players?: { id: number; name: string; role: string; avatar: string }[];
+}
+
+/**
+ * Array de fallback (vacío porque ahora tiras de fetch).
+ * Si quieres usar datos locales para pruebas,
+ * copia aquí un ejemplo con el mismo shape:
+ *
+ * export const teams: Team[] = [
+ *   {
+ *     id: '1010',
+ *     name: 'Team Heretics',
+ *     logoUrl: 'https://...firebase.../LogoFoto.png',
+ *     status: 'Abierto',
+ *   },
+ *   // ...
+ * ];
+ */
+export const teams: Team[] = [];

@@ -61,20 +61,7 @@ const Header = () => {
         </nav>
 
         {/* Espacio vacío para alinear centro */}
-        <div className="flex-1 flex justify-end items-center space-x-4">
-          {user ? (
-            <div className="text-sm text-white flex items-center space-x-2">
-              <span className="font-semibold">{user.userName}</span>
-              <img
-                src="https://api.dicebear.com/7.x/bottts/svg?seed=lolhub" // avatar dinámico opcional
-                alt="avatar"
-                className="w-8 h-8 rounded-full border border-white"
-              />
-            </div>
-          ) : (
-            <span className="text-sm text-gray-400">No conectado</span>
-          )}
-        </div>
+        <div className="flex-1 flex justify-end items-center space-x-4"></div>
       </div>
     </header>
   );
