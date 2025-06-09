@@ -27,7 +27,7 @@ const HeroSection: React.FC = () => {
         {/* Imagen */}
         <div className="flex justify-center">
           <img
-            src="/assets/dragon.jpg"
+            src="/assets/Teams/dragon.jpg"
             alt="League of Legends Dragon"
             className="w-full max-w-md rounded-xl border-4 border-blue-700 shadow-2xl object-cover"
           />
