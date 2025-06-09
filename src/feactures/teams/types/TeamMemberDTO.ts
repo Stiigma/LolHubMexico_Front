@@ -14,3 +14,13 @@ export interface TeamMemberDTO {
   imagePath?: String;
   player?: PlayerDTO;
 }
+
+
+export interface TeamMember {
+  idTeamMembers: number;
+  idTeam: number;
+  idUser: number;
+  join_date: string; // tipo `string` porque viene como string ISO
+  status: number;
+  role: string;
+}

@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { Team } from "../types/Team";
 import type { CreateTeamInvitationDTO } from "../types/CreateTeamInvitationDTO";
-import type { TeamMemberDTO } from "../types/TeamMemberDTO";
+import type { TeamMemberDTO, TeamMember } from "../types/TeamMemberDTO";
 import { getUserById } from "@/feactures/user/services/userService";
 import { getPlayerById } from "@/feactures/user/services/userService";
 import { API_URL } from '@/core/utils/API_URL';

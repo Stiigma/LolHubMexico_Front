@@ -7,6 +7,7 @@ import { getUserById } from "@/feactures/user/services/userService";
 import type { PlayerStats } from "@/feactures/user/types/PlayerStats";
 import type { ScrimDetail } from "../types/ScrimDetail";
 import type { RivalDTO } from "../types/RivalDTO";
+import type { CreateScrimDTO } from "../types/CreateScrimDTO";
 
 
 export const getScrimPending = async () => {
@@ -154,6 +155,16 @@ export const getScrimById = async (idScrim: number): Promise<ScrimPDTO | null> =
   }
 };
 
+export const createScrim = async (dto: CreateScrimDTO): Promise<boolean> => {
+  try {
+    const response = await axios.post(`${API_URL}/api/Scrim/create-scrim`, dto);
+    console.log("Scrim creada correctamente:", response.data);
+    return true;
+  } catch (error) {
+    console.error("Error al crear scrim:", error);
+    return false;
+  }
+};
 
 
 

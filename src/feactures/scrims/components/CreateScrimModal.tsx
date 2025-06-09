@@ -1,12 +1,24 @@
-import React, { useState } from "react";
+import {  getMyTeam, getTeambyId, getTeamMembers, getTeamMembersEnriched } from "@/feactures/teams/services/teamService";
+import React, { useState , useEffect} from "react";
+import type { CreateScrimDTO } from "../types/CreateScrimDTO";
+import { useUser } from "@/context/UserContext";
+import type { UserDTO } from "@/shared/types/User/UserDTO";
+import { createScrim } from "../services/ScrimService";
+import type { PlayerDTO } from "@/feactures/user/types/PlayerDTO";
 
 interface Props {
   onClose: () => void;
 }
 
 const jugadoresMock = [
-  "Jugador1", "Jugador2", "Jugador3", "Jugador4",
-  "Jugador5", "Jugador6", "Jugador7", "Jugador8"
+  { id: 101, name: "Jugador1" },
+  { id: 102, name: "Jugador2" },
+  { id: 103, name: "Jugador3" },
+  { id: 104, name: "Jugador4" },
+  { id: 105, name: "Jugador5" },
+  { id: 106, name: "Jugador6" },
+  { id: 107, name: "Jugador7" },
+  { id: 108, name: "Jugador8" },
 ];
 
 const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
@@ -14,13 +26,17 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
-  const [players, setPlayers] = useState<string[]>([]);
+  const [players, setPlayers] = useState<number[]>([]);
+  const [currentUser, setCurrentUser] = useState<UserDTO | null>(null);
+  const [availablePlayers, setAvailablePlayers] = useState<PlayerDTO[]>([]);
+  const [loadingPlayers, setLoadingPlayers] = useState(true);
+  const { user } = useUser(); 
 
-  const togglePlayer = (name: string) => {
-    if (players.includes(name)) {
-      setPlayers(players.filter(p => p !== name));
+  const togglePlayer = (id: number) => {
+    if (players.includes(id)) {
+      setPlayers(players.filter(p => p !== id));
     } else if (players.length < 5) {
-      setPlayers([...players, name]);
+      setPlayers([...players, id]);
     }
   };
 
@@ -31,12 +47,56 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
     time !== "" &&
     players.length === 5;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid) return;
-    console.log({ title, description, date, time, players });
-    onClose(); // cerrar modal después de crear
+
+    if (!user) {
+      alert("No se encontró información del usuario.");
+      return;
+    }
+
+    const team = await getMyTeam(user.idUser);
+
+    const scheduled_date = new Date(`${date}T${time}:00`).toISOString(); // Formateo correcto
+
+    const dto: CreateScrimDTO = {
+      created_by: user.idUser, // desde contexto o props
+      idTeam1: team.idTeam,     // desde contexto o props
+      idTeam2: 0,               // aún no definido
+      scheduled_date,
+      idsUsers: players, // Asumiendo que cada jugador tiene idUser
+    };
+
+    const success = await createScrim(dto);
+
+    if (success) {
+      alert("Scrim creada correctamente ✅");
+      onClose(); // cerrar modal
+    } else {
+      alert("Error al crear la scrim ❌");
+    }
   };
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      if (!user) return;
+
+      try {
+        const team = await getMyTeam(user.idUser);
+        const members = await getTeamMembersEnriched(team.idTeam);
+
+        const onlyPlayers = members
+          .map(m => m.player!); // ! porque ya filtramos los nulls
+
+        setAvailablePlayers(onlyPlayers);
+      } catch (error) {
+        console.error("Error al obtener jugadores del equipo:", error);
+      }
+    };
+
+    fetchPlayers();
+  }, [user]);
+
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -110,18 +170,18 @@ const CreateScrimModal: React.FC<Props> = ({ onClose }) => {
               Selecciona 5 jugadores
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {jugadoresMock.map((name) => (
+              {availablePlayers.map((player) => (
                 <button
+                  key={player.idUser}
                   type="button"
-                  key={name}
-                  onClick={() => togglePlayer(name)}
+                  onClick={() => togglePlayer(player.idUser)}
                   className={`py-2 px-3 rounded-md border ${
-                    players.includes(name)
+                    players.includes(player.idUser)
                       ? "bg-green-600 border-green-400"
                       : "bg-[#1e3a5f] border-[#1e3a5f]"
                   } text-white text-sm`}
                 >
-                  {name}
+                  {player.summonerName}
                 </button>
               ))}
             </div>
