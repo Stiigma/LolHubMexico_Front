@@ -13,7 +13,7 @@ export interface Team {
 
   // Opcionales, para cuando los necesites:
   // bannerUrl?: string;
-  // description?: string;
+  description?: string;
   // creationDate?: string;
   // captainId?: number;
   // stats?: {

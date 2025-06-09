@@ -1,5 +1,5 @@
 // src/features/teams/pages/BrowserPage.tsx
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import TeamCard from "../components/TeamCard";
 import type { Team } from "../../../shared/data/teams";
 import { getAllTeams } from "../services/teamService";

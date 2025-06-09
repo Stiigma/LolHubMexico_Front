@@ -8,7 +8,7 @@ import { Settings, BarChart2, UserPlus } from "lucide-react";
 import type { UserSearchDTO } from "../../auth/types/UserSearchDTO";
 import type { TeamMemberDTO } from "../types/TeamMemberDTO";
 import { getTeamMembersEnriched } from "../services/teamService";
-import MemberTeam from "../components/MemberTeam";
+import MemberTeam from "../components/MemberCard";
 import { inviteUserToTeam } from "../services/teamService";
 
 const MyTeamPage: React.FC = () => {
@@ -25,20 +25,22 @@ const MyTeamPage: React.FC = () => {
   const [members, setMembers] = useState<TeamMemberDTO[]>([]);
 
   useEffect(() => {
-  if (!user?.idUser) return;
+    if (!user?.idUser) return;
 
     getMyTeam(user.idUser)
       .then(async (fetchedTeam) => {
         setTeam(fetchedTeam);
-    console.log(fetchedTeam);
+        console.log(fetchedTeam);
 
-      // Ahora que tienes el equipo, obtén los miembros
-      const enrichedMembers = await getTeamMembersEnriched(fetchedTeam.idTeam);
-      setMembers(enrichedMembers);
-    })
-    .catch(() => setError("Error al obtener tu equipo"))
-    .finally(() => setLoading(false));
-}, [user]);
+        // Ahora que tienes el equipo, obtén los miembros
+        const enrichedMembers = await getTeamMembersEnriched(
+          fetchedTeam.idTeam
+        );
+        setMembers(enrichedMembers);
+      })
+      .catch(() => setError("Error al obtener tu equipo"))
+      .finally(() => setLoading(false));
+  }, [user]);
 
   const handleSearch = async () => {
     if (!searchTerm.trim()) return;
@@ -53,23 +55,22 @@ const MyTeamPage: React.FC = () => {
     }
   };
 
-
   const handleInvite = async (targetUserId: number) => {
     if (!user || !team) return;
 
     try {
-        await inviteUserToTeam({
+      await inviteUserToTeam({
         idTeam: team.idTeam,
         idUser: targetUserId,
         invitedBy: user.idUser,
         message: "¡Únete a nuestro equipo competitivo!",
-        });
-        alert("Invitación enviada con éxito.");
-        setShowInviteModal(false);
+      });
+      alert("Invitación enviada con éxito.");
+      setShowInviteModal(false);
     } catch (error) {
-        alert("No se pudo enviar la invitación.");
+      alert("No se pudo enviar la invitación.");
     }
-    };
+  };
 
   if (loading) {
     return (
@@ -83,7 +84,9 @@ const MyTeamPage: React.FC = () => {
     return (
       <div className="text-white text-center mt-20">
         <h1 className="text-4xl font-bold">No se encontró tu equipo</h1>
-        <p className="text-gray-400 mt-2">Aún no formas parte de ningún equipo competitivo.</p>
+        <p className="text-gray-400 mt-2">
+          Aún no formas parte de ningún equipo competitivo.
+        </p>
         <button
           onClick={() => navigate("/teams/preview")}
           className="mt-6 px-6 py-3 bg-[#10b981] hover:bg-[#34d399] text-white rounded font-semibold transition"
@@ -106,7 +109,10 @@ const MyTeamPage: React.FC = () => {
             <button title="Configuración">
               <Settings className="w-6 h-6 hover:text-[#10b981]" />
             </button>
-            <button title="Invitar miembros" onClick={() => setShowInviteModal(true)}>
+            <button
+              title="Invitar miembros"
+              onClick={() => setShowInviteModal(true)}
+            >
               <UserPlus className="w-6 h-6 hover:text-[#10b981]" />
             </button>
           </div>
@@ -115,19 +121,33 @@ const MyTeamPage: React.FC = () => {
         <div className="bg-[#112a46] rounded-xl shadow-lg p-8 flex flex-col sm:flex-row items-center">
           <div className="w-32 h-32 bg-gray-700 rounded-full flex items-center justify-center text-3xl font-bold mr-8">
             <img
-                src={team.teamLogo}
-                alt="Logo del equipo"
-                className="w-32 h-32 bg-gray-700 rounded-full object-cover"
-              />
+              src={team.teamLogo}
+              alt="Logo del equipo"
+              className="w-32 h-32 bg-gray-700 rounded-full object-cover"
+            />
           </div>
           <div className="flex-1">
             <h2 className="text-3xl font-extrabold mb-2">{team.teamName}</h2>
-            <p className="text-gray-300 mb-1">{team.descripcionTeam || "Sin descripción aún."}</p>
+            <p className="text-gray-300 mb-1">
+              {team.descripcionTeam || "Sin descripción aún."}
+            </p>
             <div className="mt-4 space-y-1 text-sm">
-              <p><span className="font-bold text-white">ID del equipo:</span> {team.idTeam}</p>
-              <p><span className="font-bold text-white">Fecha de creación:</span> {new Date(team.creationDate).toLocaleDateString()}</p>
-              <p><span className="font-bold text-white">ID Capitán:</span> {team.idCapitan}</p>
-              <p><span className="font-bold text-white">Estado:</span> {team.status === 1 ? "Activo" : "Inactivo"}</p>
+              <p>
+                <span className="font-bold text-white">ID del equipo:</span>{" "}
+                {team.idTeam}
+              </p>
+              <p>
+                <span className="font-bold text-white">Fecha de creación:</span>{" "}
+                {new Date(team.creationDate).toLocaleDateString()}
+              </p>
+              <p>
+                <span className="font-bold text-white">ID Capitán:</span>{" "}
+                {team.idCapitan}
+              </p>
+              <p>
+                <span className="font-bold text-white">Estado:</span>{" "}
+                {team.status === 1 ? "Activo" : "Inactivo"}
+              </p>
             </div>
           </div>
         </div>
@@ -173,7 +193,9 @@ const MyTeamPage: React.FC = () => {
                         Invitar
                       </button>
                     ) : (
-                      <span className="text-gray-400 text-xs">Ya en equipo</span>
+                      <span className="text-gray-400 text-xs">
+                        Ya en equipo
+                      </span>
                     )}
                   </li>
                 ))}

@@ -1,4 +1,4 @@
-import type { SrvRecord } from "dns";
+//import type { SrvRecord } from "dns";
 import type { PlayerDTO } from "@/feactures/user/types/PlayerDTO";
 
 export interface TeamMemberDTO {
@@ -9,9 +9,9 @@ export interface TeamMemberDTO {
   Status: number;
   role: string;
   email?: string;
-  Username?: String;
+  Username?: string;
   linkSummoner?: boolean;
-  imagePath?: String;
+  imagePath?: string;
   player?: PlayerDTO;
 }
 
