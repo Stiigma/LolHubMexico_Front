@@ -49,6 +49,21 @@ export const getMyTeam = async (idUser: number): Promise<Team> => {
   }
 };
 
+export const getTeambyId = async (idTeam: number): Promise<Team> => {
+  try {
+    const response = await axios.get(`${API_URL}/api/Team/by-id`, {
+      params: { idTeam },
+    });
+    console.log(response.data.team)
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener el equipo:", error);
+    throw error;
+  }
+};
+
+
+
 
 export const getTeamMembers = async (idTeam: number): Promise<TeamMemberDTO[]> => {
   try {
@@ -126,3 +141,5 @@ export const inviteUserToTeam = async (dto: CreateTeamInvitationDTO) => {
     throw error;
   }
 };
+
+
