@@ -8,6 +8,7 @@ import { getPlayerById, getUserById } from "@/feactures/user/services/userServic
 import type { ScrimDetail } from "../types/ScrimDetail";
 import type { RivalDTO } from "../types/RivalDTO";
 import type { CreateScrimDTO } from "../types/CreateScrimDTO";
+import type { MatchDetail } from "../types/MatchDetail";
 
 
 export const getScrimPending = async () => {
@@ -107,6 +108,15 @@ export const getScrimPlayers = async (idScrim: number, idTeam: number) => {
     return [];
   }
 };
+
+export async function getMatchDetailByScrim(
+  idScrim: number
+  ): Promise<MatchDetail> {
+    const response = await axios.get<MatchDetail>(`${API_URL}/api/MatchDeta/by-user`, {
+      params: { idScrim },
+    });
+    return response.data;
+}
 
 export const getScrimDetailFull = async (idScrim: number): Promise<ScrimDetail | null> => {
   try {
