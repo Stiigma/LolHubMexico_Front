@@ -17,6 +17,7 @@ import BrowserPage from "../feactures/teams/pages/BrowserPage";
 import MyTeamPage from "../feactures/teams/pages/MyTeamPage";
 import InvitationTeamPage from "../feactures/teams/pages/InvitationTeamPage";
 import TeamDetail from "../feactures/teams/pages/TeamDetail";
+import PlayerDetail from "../feactures/teams/pages/PlayerDetail";
 
 // Torneos
 import TournamentLayout from "../feactures/tournaments/layout/TournamentLayout";
@@ -89,6 +90,7 @@ const AppRoutes = () => {
           <Route path="my-team" element={<MyTeamPage />} />
           <Route path="invitation-team" element={<InvitationTeamPage />} />
           <Route path=":id" element={<TeamDetail />} />
+          <Route path=":id" element={<PlayerDetail />} />
         </Route>
       </Route>
 
@@ -110,7 +112,8 @@ const AppRoutes = () => {
         <Route path="create" element={<CreateTournamentPage />} />
         <Route path=":id" element={<TournamentDetailPage />} />
         <Route path=":id/edit" element={<EditTournamentPage />} />
-        <Route path=":id/bracket" element={<TournamentBracketPage />} /> {/* ✅ NUEVA RUTA */}
+        <Route path=":id/bracket" element={<TournamentBracketPage />} />{" "}
+        {/* ✅ NUEVA RUTA */}
       </Route>
 
       {/* Scrims bajo MainLayout */}
@@ -136,10 +139,3 @@ const AppRoutes = () => {
 };
 
 export default AppRoutes;
-
-
-
-
-
-
-

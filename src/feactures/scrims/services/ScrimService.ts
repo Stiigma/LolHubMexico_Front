@@ -186,9 +186,22 @@ export const getActiveScrimsByUser = async (idUser: number): Promise<ScrimPDTO[]
   }
 };
 
+export const getActiveScrimsByTeamId = async (idTeam: number): Promise<ScrimPDTO[]> => {
+  try {
+    const response = await axios.get<ScrimPDTO[]>(`${API_URL}/api/Scrim/team/by-id`, {
+      params: { idTeam },
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error al obtener scrims activas por usuario:", error);
+    return [];
+  }
+};
+
 export const getScrimById = async (idScrim: number): Promise<ScrimPDTO | null> => {
   try {
-    const response = await axios.get(`${API_URL}/api/Scrim/by-id`, {
+    const response = await axios.get(`${API_URL}/api/Scrim/by-id/`, {
       params: { idScrim },
     });
     return response.data;
