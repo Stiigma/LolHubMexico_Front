@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CreateTournamentModal from "../components/CreateTournamentModal";
+import TournamentHeroBanner from "../components/TournamentHeroBanner"; // Importa el nuevo componente de banner
 
+// Datos estáticos de ejemplo para los torneos
 const tournaments = [
   {
     id: 1,
@@ -33,41 +35,42 @@ const TournamentsPreviewPage: React.FC = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
+  // Función para manejar el clic en el botón "Participar"
   const handleJoin = (id: number, status: string) => {
+    // Solo permite la navegación si el torneo está "Abierto"
     if (status === "Abierto") {
-      navigate(`/tournaments/${id}/bracket`);
+      navigate(`/tournaments/${id}/bracket`); // Navega a la página del bracket del torneo
     }
   };
 
   return (
     <div className="min-h-screen bg-[#0d1b2a] text-white px-6 py-12">
-      <div className="flex justify-between items-center mb-10 max-w-6xl mx-auto">
-        <h1 className="text-4xl font-extrabold">Torneos Activos</h1>
-        <button
-          className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded"
-          onClick={() => setShowModal(true)}
-        >
-          Crear Torneo
-        </button>
-      </div>
+      {/* Componente Hero Banner para la sección de torneos */}
+      {/* Pasa la función para abrir el modal al hacer clic en el botón "Crear Torneo" del banner */}
+      <TournamentHeroBanner onCreateTournament={() => setShowModal(true)} />
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      {/* Sección de "Próximos Torneos" */}
+      <h2 className="text-3xl font-extrabold text-white mb-6 text-center max-w-6xl mx-auto">
+        Próximos Torneos
+      </h2>
+      {/* Contenedor para la lista de torneos, usando flexbox para apilar verticalmente */}
+      <div className="flex flex-col gap-6 max-w-4xl mx-auto">
+        {/* Mapea sobre el array de torneos para renderizar cada uno */}
         {tournaments.map((tournament) => (
           <div
-            key={tournament.id}
-            className="bg-[#112a46] rounded-xl overflow-hidden shadow-md hover:shadow-lg transition transform hover:scale-105"
+            key={tournament.id} // Clave única para cada elemento de la lista
+            // Clases de Tailwind ajustadas para mejorar la apariencia de la lista
+            className="bg-[#112a46] rounded-xl shadow-md p-6 flex flex-col md:flex-row md:items-center justify-between hover:shadow-lg transition transform hover:scale-105"
           >
-            <img
-              src={tournament.image}
-              alt={tournament.name}
-              className="w-full h-40 object-cover"
-            />
-            <div className="p-4 space-y-2">
-              <h3 className="text-xl font-bold">{tournament.name}</h3>
+            <div className="flex-1 mb-4 md:mb-0"> {/* Flex-1 para que ocupe el espacio disponible */}
+              <h3 className="text-xl font-bold mb-1">{tournament.name}</h3> {/* Margen inferior ajustado */}
               <p className="text-sm text-gray-300">{tournament.description}</p>
-              <div className="text-xs text-gray-400">Fecha: {tournament.date}</div>
+              <div className="text-xs text-gray-400 mt-2">Fecha: {tournament.date}</div>
+            </div>
+            <div className="flex flex-row items-center gap-4"> {/* Cambiado a flex-row para botones y estado */}
+              {/* Indicador de estado del torneo (Abierto/Cerrado) */}
               <span
-                className={`text-xs font-semibold px-2 py-1 rounded ${
+                className={`text-xs font-semibold px-3 py-1 rounded-full ${
                   tournament.status === "Abierto"
                     ? "bg-green-600 text-white"
                     : "bg-red-600 text-white"
@@ -75,21 +78,18 @@ const TournamentsPreviewPage: React.FC = () => {
               >
                 {tournament.status}
               </span>
-
-              {/* Botón Participar */}
-              <div className="pt-2">
-                <button
-                  onClick={() => handleJoin(tournament.id, tournament.status)}
-                  disabled={tournament.status !== "Abierto"}
-                  className={`w-full px-4 py-2 mt-2 rounded font-semibold transition ${
-                    tournament.status === "Abierto"
-                      ? "bg-green-500 hover:bg-green-600 text-white"
-                      : "bg-gray-600 text-gray-300 cursor-not-allowed"
-                  }`}
-                >
-                  {tournament.status === "Abierto" ? "Participar" : "Cerrado"}
-                </button>
-              </div>
+              {/* Botón "Participar" o "Cerrado" */}
+              <button
+                onClick={() => handleJoin(tournament.id, tournament.status)}
+                disabled={tournament.status !== "Abierto"} // Deshabilita el botón si no está abierto
+                className={`px-6 py-2 rounded-lg font-semibold transition duration-300 ease-in-out ${
+                  tournament.status === "Abierto"
+                    ? "bg-blue-600 hover:bg-blue-700 text-white shadow-md"
+                    : "bg-gray-600 text-gray-300 cursor-not-allowed"
+                }`}
+              >
+                {tournament.status === "Abierto" ? "Participar" : "Cerrado"}
+              </button>
             </div>
           </div>
         ))}
@@ -102,6 +102,4 @@ const TournamentsPreviewPage: React.FC = () => {
 };
 
 export default TournamentsPreviewPage;
-
-
 

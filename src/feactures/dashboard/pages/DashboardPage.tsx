@@ -12,23 +12,39 @@ const DashboardPage: React.FC = () => {
         <HeroBanner />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+          {/* Equipos */}
           <div onClick={() => navigate('/teams/browser')} className="cursor-pointer">
             <Card title="Equipos Destacados" image="/assets/Home/teams.png">
               Explora los equipos mejor posicionados.
             </Card>
           </div>
-          <Card title="Ranking competitivo" image="/assets/Home/ranking.png">
-            Consulta las estadísticas de los mejores invocadores.
-          </Card>
 
-          <Card title="Feed" image="/assets/Home/feed.png">
-            Últimas noticias, actualizaciones y más.
-          </Card>
-          <Card title="Mi progreso" image="/assets/Home/stats.png">
-            Revisa tu rendimiento y partidas recientes.
-          </Card>
+          {/* Scrims */}
+          <div onClick={() => navigate('/scrims')} className="cursor-pointer">
+            <Card title="Scrims" image="/assets/scrims.png">
+              Checa las scrims activas.
+            </Card>
+          </div>
 
-          <div className="md:col-span-2 flex justify-center">
+          {/* Feed */}
+          <div onClick={() => navigate('/feed')} className="cursor-pointer">
+            <Card title="Feed" image="/assets/Home/feed.png">
+              Últimas noticias, actualizaciones y más.
+            </Card>
+          </div>
+
+          {/* Mi progreso */}
+          <div onClick={() => navigate('/stats')} className="cursor-pointer">
+            <Card title="Mi progreso" image="/assets/Home/stats.png">
+              Revisa tu rendimiento y partidas recientes.
+            </Card>
+          </div>
+
+          {/* Torneos */}
+          <div
+            onClick={() => navigate('/tournaments')}
+            className="md:col-span-2 flex justify-center cursor-pointer"
+          >
             <Card title="Torneos" image="/assets/Home/tournaments.png">
               Participa en eventos competitivos.
             </Card>

@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-const CreateTournamentForm = () => {
+interface Props {
+  onSuccess: () => void;
+}
+
+const CreateTournamentForm: React.FC<Props> = ({ onSuccess }) => {
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
@@ -26,9 +30,10 @@ const CreateTournamentForm = () => {
 
     toast.success("¡Torneo creado exitosamente!");
 
-    // Redirige después de 2.5 segundos
+    // Redirige y cierra el modal después de 2.5 segundos
     setTimeout(() => {
-      navigate("/tournaments");
+      onSuccess(); // cerrar el modal
+      navigate("/tournaments"); // navegar a la lista de torneos
     }, 2500);
   };
 
