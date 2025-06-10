@@ -58,11 +58,13 @@ export const getScrimEnriched = async (scrim: ScrimPDTO): Promise<ScrimEnriched 
   const descripcion = `Scrim Creada por ${creator.userName}`;
   // Traducción del status numérico a texto
   const statusText =
-    scrim.status === 0
-      ? "Pendiente"
-      : scrim.status === 1
-      ? "Invitación Enviada"
-      : "Ocupada";
+  scrim.status === 0
+    ? "Pendiente"
+    : scrim.status === 1
+    ? "Invitación Enviada"
+    : scrim.status === 4
+    ? "Completada"
+    : "Ocupada";
 
   return {
     scrimPDTO: scrim,

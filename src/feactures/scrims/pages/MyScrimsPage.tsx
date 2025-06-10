@@ -13,7 +13,7 @@ const MyScrimsPage: React.FC = () => {
   const { user } = useUser();
 
   const handleScrimClick = (scrim: ScrimEnriched) => {
-    if (scrim.scrimPDTO.status === 2) {
+    if (scrim.scrimPDTO.status === 2 || scrim.scrimPDTO.status === 3 || scrim.scrimPDTO.status === 4) {
       navigate(`/scrims/${scrim.scrimPDTO.idScrim}`);
     } else {
       alert("Esta scrim aún no está activa para ver el detalle.");
