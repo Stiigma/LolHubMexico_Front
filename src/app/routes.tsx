@@ -17,7 +17,7 @@ import BrowserPage from "../feactures/teams/pages/BrowserPage";
 import MyTeamPage from "../feactures/teams/pages/MyTeamPage";
 import InvitationTeamPage from "../feactures/teams/pages/InvitationTeamPage";
 import TeamDetail from "../feactures/teams/pages/TeamDetail";
-import PlayerDetail from "../feactures/teams/pages/PlayerDetail";
+import PlayerDetail from "../feactures/teams/pages/PlayerDetail"; // <--- Tu PlayerDetail
 
 // Torneos
 import TournamentLayout from "../feactures/tournaments/layout/TournamentLayout";
@@ -55,8 +55,7 @@ const AppRoutes = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-
-        {/* Dashboard */}
+        {/* Dashboard (directamente bajo PrivateRoute) */}
         <Route
           path="/dashboard"
           element={
@@ -65,84 +64,40 @@ const AppRoutes = () => {
             </PrivateRoute>
           }
         />
-
-        {/* Perfil bajo MainLayout */}
+        {/* Rutas que usan MainLayout (perfil, equipos, torneos, scrims) */}
         <Route
-          path="/profile"
           element={
+            // Este Route envolverá todas las secciones principales
             <PrivateRoute>
               <MainLayout />
             </PrivateRoute>
           }
         >
-          <Route index element={<ViewProfilePage />} />
-          <Route path="edit" element={<EditProfilePage />} />
-        </Route>
+          {/* Rutas de Perfil */}
+          <Route path="/profile" element={<ViewProfilePage />} />
+          <Route path="/profile/edit" element={<EditProfilePage />} />
 
-        {/* Equipos bajo MainLayout */}
-        <Route
-          path="/teams"
-          element={
-            <PrivateRoute>
-              <MainLayout />
-            </PrivateRoute>
-          }
-        >
-          <Route element={<TeamsLayout />}>
+          {/* Rutas de Equipos */}
+          <Route path="/teams" element={<TeamsLayout />}>
+            {" "}
+            {/* TeamsLayout es el padre de estas sub-rutas de equipo */}
+            <Route index element={<Navigate to="preview" replace />} />{" "}
+            {/* Redirige /teams a /teams/preview */}
             <Route path="preview" element={<PreviewPage />} />
             <Route path="browser" element={<BrowserPage />} />
             <Route path="my-team" element={<MyTeamPage />} />
             <Route path="invitation-team" element={<InvitationTeamPage />} />
-            <Route path=":id" element={<TeamDetail />} />
-            <Route path=":id" element={<PlayerDetail />} />
+            <Route path=":id" element={<TeamDetail />} />{" "}
+            {/* /teams/:id para detalle de equipo */}
           </Route>
-          {/* Perfil bajo MainLayout */}
-          <Route
-            path="/profile"
-            element={
-              <PrivateRoute>
-                <MainLayout />
-              </PrivateRoute>
-            }
-          >
-            <Route index element={<ViewProfilePage />} />
-            <Route path="edit" element={<EditProfilePage />} />
-          </Route>
-          <Route path="create" element={<CreateTournamentPage />} />
-          <Route path=":id" element={<TournamentDetailPage />} />
-          <Route path=":id/edit" element={<EditTournamentPage />} />
-          <Route path=":id/bracket" element={<TournamentBracketPage />} />{" "}
-          {/* ✅ NUEVA RUTA */}
-        </Route>
 
-        {/* Equipos bajo MainLayout */}
-        <Route
-          path="/teams"
-          element={
-            <PrivateRoute>
-              <MainLayout />
-            </PrivateRoute>
-          }
-        >
-          <Route element={<TeamsLayout />}>
-            <Route path="preview" element={<PreviewPage />} />
-            <Route path="browser" element={<BrowserPage />} />
-            <Route path="my-team" element={<MyTeamPage />} />
-            <Route path="invitation-team" element={<InvitationTeamPage />} />
-            <Route path=":id" element={<TeamDetail />} />
-          </Route>
-        </Route>
+          {/* RUTA PARA EL DETALLE DEL JUGADOR - FUERA DEL TeamsLayout anidado con :id */}
+          {/* Se define en el mismo nivel que /teams para evitar conflictos de :id */}
+          {/* La URL será /player/:id (ej. /player/7) */}
+          <Route path="/player/:id" element={<PlayerDetail />} />
 
-        {/* Torneos bajo MainLayout */}
-        <Route
-          path="/tournaments"
-          element={
-            <PrivateRoute>
-              <MainLayout />
-            </PrivateRoute>
-          }
-        >
-          <Route element={<TournamentLayout />}>
+          {/* Rutas de Torneos */}
+          <Route path="/tournaments" element={<TournamentLayout />}>
             <Route index element={<Navigate to="preview" replace />} />
             <Route path="preview" element={<TournamentsPreviewPage />} />
             <Route path="my" element={<MyTournamentsPage />} />
@@ -151,30 +106,40 @@ const AppRoutes = () => {
               element={<InvitationsPageTournaments />}
             />
           </Route>
-          <Route path="create" element={<CreateTournamentPage />} />
-          <Route path=":id" element={<TournamentDetailPage />} />
-          <Route path=":id/edit" element={<EditTournamentPage />} />
-          <Route path=":id/bracket" element={<TournamentBracketPage />} />
-        </Route>
+          {/* Rutas detalladas de torneo, fuera del TournamentLayout anidado con path específico */}
+          <Route
+            path="/tournaments/create"
+            element={<CreateTournamentPage />}
+          />
+          <Route path="/tournaments/:id" element={<TournamentDetailPage />} />
+          <Route
+            path="/tournaments/:id/edit"
+            element={<EditTournamentPage />}
+          />
+          <Route
+            path="/tournaments/:id/bracket"
+            element={<TournamentBracketPage />}
+          />
 
-        {/* Scrims bajo MainLayout */}
-        <Route
-          path="/scrims"
-          element={
-            <PrivateRoute>
-              <MainLayout />
-            </PrivateRoute>
-          }
-        >
-          <Route element={<ScrimsLayout />}>
+          {/* Rutas de Scrims */}
+          <Route path="/scrims" element={<ScrimsLayout />}>
+            <Route index element={<Navigate to="preview" replace />} />
             <Route path="preview" element={<ScrimsPreviewPage />} />
             <Route path="mine" element={<MyScrimsPage />} />
             <Route path="invitations" element={<InvitationsPageScrims />} />
           </Route>
-          <Route path="history/:id" element={<CompletedScrimDetailPage />} />
-          <Route path=":id/edit" element={<EditScrimPage />} />
-          <Route path=":id" element={<ScrimDetailPage />} />
-        </Route>
+          {/* Rutas detalladas de scrims, fuera del ScrimsLayout anidado con path específico */}
+          <Route
+            path="/scrims/history/:id"
+            element={<CompletedScrimDetailPage />}
+          />
+          <Route path="/scrims/:id/edit" element={<EditScrimPage />} />
+          <Route path="/scrims/:id" element={<ScrimDetailPage />} />
+        </Route>{" "}
+        {/* Cierre del MainLayout */}
+        {/* Ruta catch-all para 404 (opcional) */}
+        <Route path="*" element={<Navigate to="/" replace />} />{" "}
+        {/* O una página 404 dedicada */}
       </Routes>
     </ProfileModalProvider>
   );
