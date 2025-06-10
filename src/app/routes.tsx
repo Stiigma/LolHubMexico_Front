@@ -40,104 +40,110 @@ import EditScrimPage from "../feactures/scrims/pages/EditScrimPage";
 // Layout general
 import MainLayout from "../layouts/MainLayout";
 
+// Contexto de perfil
+import { ProfileModalProvider } from "../feactures/dashboard/components/ProfileModalContext";
+
 // Protección de rutas privadas
 import PrivateRoute from "../core/PrivateRoute";
 
 const AppRoutes = () => {
   return (
-    <Routes>
-      {/* Rutas públicas */}
-      <Route path="/" element={<HomePage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
+    <ProfileModalProvider>
+      <Routes>
+        {/* Rutas públicas */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
-      {/* Dashboard bajo MainLayout */}
-      <Route
-        path="/dashboard"
-        element={
-          <PrivateRoute>
-            <MainLayout />
-          </PrivateRoute>
-        }
-      >
-        <Route index element={<DashboardPage />} />
-      </Route>
-
-      {/* Perfil bajo MainLayout */}
-      <Route
-        path="/profile"
-        element={
-          <PrivateRoute>
-            <MainLayout />
-          </PrivateRoute>
-        }
-      >
-        <Route index element={<ViewProfilePage />} />
-        <Route path="edit" element={<EditProfilePage />} />
-      </Route>
-
-      {/* Equipos bajo MainLayout */}
-      <Route
-        path="/teams"
-        element={
-          <PrivateRoute>
-            <MainLayout />
-          </PrivateRoute>
-        }
-      >
-        <Route element={<TeamsLayout />}>
-          <Route path="preview" element={<PreviewPage />} />
-          <Route path="browser" element={<BrowserPage />} />
-          <Route path="my-team" element={<MyTeamPage />} />
-          <Route path="invitation-team" element={<InvitationTeamPage />} />
-          <Route path=":id" element={<TeamDetail />} />
+        {/* Dashboard bajo MainLayout */}
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <MainLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<DashboardPage />} />
         </Route>
-      </Route>
 
-      {/* Torneos bajo MainLayout */}
-      <Route
-        path="/tournaments"
-        element={
-          <PrivateRoute>
-            <MainLayout />
-          </PrivateRoute>
-        }
-      >
-        <Route element={<TournamentLayout />}>
-          <Route index element={<Navigate to="preview" replace />} />
-          <Route path="preview" element={<TournamentsPreviewPage />} />
-          <Route path="my" element={<MyTournamentsPage />} />
-          <Route path="invitations" element={<InvitationsPageTournaments />} />
+        {/* Perfil bajo MainLayout */}
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <MainLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<ViewProfilePage />} />
+          <Route path="edit" element={<EditProfilePage />} />
         </Route>
-        <Route path="create" element={<CreateTournamentPage />} />
-        <Route path=":id" element={<TournamentDetailPage />} />
-        <Route path=":id/edit" element={<EditTournamentPage />} />
-        <Route path=":id/bracket" element={<TournamentBracketPage />} />
-      </Route>
 
-      {/* Scrims bajo MainLayout */}
-      <Route
-        path="/scrims"
-        element={
-          <PrivateRoute>
-            <MainLayout />
-          </PrivateRoute>
-        }
-      >
-        <Route element={<ScrimsLayout />}>
-          <Route path="preview" element={<ScrimsPreviewPage />} />
-          <Route path="mine" element={<MyScrimsPage />} />
-          <Route path="invitations" element={<InvitationsPageScrims />} />
+        {/* Equipos bajo MainLayout */}
+        <Route
+          path="/teams"
+          element={
+            <PrivateRoute>
+              <MainLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route element={<TeamsLayout />}>
+            <Route path="preview" element={<PreviewPage />} />
+            <Route path="browser" element={<BrowserPage />} />
+            <Route path="my-team" element={<MyTeamPage />} />
+            <Route path="invitation-team" element={<InvitationTeamPage />} />
+            <Route path=":id" element={<TeamDetail />} />
+          </Route>
         </Route>
-        <Route path="history/:id" element={<CompletedScrimDetailPage />} />
-        <Route path=":id/edit" element={<EditScrimPage />} />
-        <Route path=":id" element={<ScrimDetailPage />} />
-      </Route>
-    </Routes>
+
+        {/* Torneos bajo MainLayout */}
+        <Route
+          path="/tournaments"
+          element={
+            <PrivateRoute>
+              <MainLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route element={<TournamentLayout />}>
+            <Route index element={<Navigate to="preview" replace />} />
+            <Route path="preview" element={<TournamentsPreviewPage />} />
+            <Route path="my" element={<MyTournamentsPage />} />
+            <Route path="invitations" element={<InvitationsPageTournaments />} />
+          </Route>
+          <Route path="create" element={<CreateTournamentPage />} />
+          <Route path=":id" element={<TournamentDetailPage />} />
+          <Route path=":id/edit" element={<EditTournamentPage />} />
+          <Route path=":id/bracket" element={<TournamentBracketPage />} />
+        </Route>
+
+        {/* Scrims bajo MainLayout */}
+        <Route
+          path="/scrims"
+          element={
+            <PrivateRoute>
+              <MainLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route element={<ScrimsLayout />}>
+            <Route path="preview" element={<ScrimsPreviewPage />} />
+            <Route path="mine" element={<MyScrimsPage />} />
+            <Route path="invitations" element={<InvitationsPageScrims />} />
+          </Route>
+          <Route path="history/:id" element={<CompletedScrimDetailPage />} />
+          <Route path=":id/edit" element={<EditScrimPage />} />
+          <Route path=":id" element={<ScrimDetailPage />} />
+        </Route>
+      </Routes>
+    </ProfileModalProvider>
   );
 };
 
 export default AppRoutes;
+
 
 
 

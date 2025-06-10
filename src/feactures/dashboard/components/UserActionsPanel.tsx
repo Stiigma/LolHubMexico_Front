@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "@/context/UserContext";
 import { getPlayerById } from "@/feactures/user/services/userService";
+import { useProfileModal } from "@/feactures/dashboard/components/ProfileModalContext";
 import type { PlayerDTO } from "@/feactures/user/types/PlayerDTO";
 
 import { FaBell, FaComments, FaUsers, FaPlus } from "react-icons/fa";
 
-interface Props {
-  onProfileClick?: () => void; // ✅ ahora opcional
-}
-
-const UserActionsPanel: React.FC<Props> = ({ onProfileClick }) => {
+const UserActionsPanel: React.FC = () => {
   const { user } = useUser();
+  const { openModal } = useProfileModal(); // ✅ accede al contexto global
   const [player, setPlayer] = useState<PlayerDTO | null>(null);
 
   useEffect(() => {
@@ -32,7 +30,7 @@ const UserActionsPanel: React.FC<Props> = ({ onProfileClick }) => {
       {/* Avatar + nombre del usuario */}
       <div
         className="flex flex-col items-center cursor-pointer"
-        onClick={() => onProfileClick?.()} // ✅ solo si se define
+        onClick={openModal} // ✅ abre el modal desde cualquier parte
       >
         <img
           src={player?.profilePicture || "/assets/avatars/avatar1.png"}
@@ -54,6 +52,7 @@ const UserActionsPanel: React.FC<Props> = ({ onProfileClick }) => {
 };
 
 export default UserActionsPanel;
+  
 
 
 

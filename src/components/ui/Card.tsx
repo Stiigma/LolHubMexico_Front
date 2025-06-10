@@ -12,7 +12,7 @@ const Card: React.FC<CardProps> = ({
   title,
   image,
   children,
-  width = 'w-[400px]',     // puedes cambiar esto al usarlo
+  width = 'w-[300px]',     // puedes cambiar esto al usarlo
   height = 'min-h-[350px]'       // valor por defecto si no mandas nada
 }) => {
   return (
