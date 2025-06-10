@@ -9,7 +9,6 @@ import type { ScrimDetail } from "../types/ScrimDetail";
 import type { RivalDTO } from "../types/RivalDTO";
 import type { CreateScrimDTO } from "../types/CreateScrimDTO";
 import type { MatchDetail } from "../types/MatchDetail";
-import type { ScrimLog } from "../types/ScrimLog";
 import type { GeminiAnalysis } from "../types/gemini-analysis";
 
 
