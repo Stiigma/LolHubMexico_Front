@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HeroBanner from '../components/HeroBanner';
 import Card from '../../../components/ui/Card';
 import Sidebar from '../components/Sidebar';
 import UserActionsPanel from '../components/UserActionsPanel';
+import ProfileModal from '../../user/components/ProfileModal'; // ✅ ruta actualizada
 
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
+  const [showProfileModal, setShowProfileModal] = useState(false);
+
+  const handleOpenProfileModal = () => setShowProfileModal(true);
+  const handleCloseProfileModal = () => setShowProfileModal(false);
 
   return (
     <div className="flex min-h-screen text-white bg-gradient-to-br from-gray-900 via-blue-900 to-sky-800">
@@ -15,8 +20,11 @@ const DashboardPage: React.FC = () => {
       <div className="flex-1 relative flex flex-col lg:flex-row">
         {/* Panel del usuario (perfil + iconos) */}
         <div className="absolute top-6 right-6 z-50">
-          <UserActionsPanel />
+          <UserActionsPanel onProfileClick={handleOpenProfileModal} /> {/* 👈 paso el callback */}
         </div>
+
+        {/* Modal del perfil del usuario */}
+        {showProfileModal && <ProfileModal onClose={handleCloseProfileModal} />}
 
         {/* Contenido principal con espacio a la derecha */}
         <main className="flex-1 p-6 pr-32 space-y-6">
@@ -56,6 +64,8 @@ const DashboardPage: React.FC = () => {
 };
 
 export default DashboardPage;
+
+
 
 
 

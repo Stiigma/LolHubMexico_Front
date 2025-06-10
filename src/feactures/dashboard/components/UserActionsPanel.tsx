@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "@/context/UserContext";
-// import  ProfileModal  from "@/context/ProfileModalContext";
 import { getPlayerById } from "@/feactures/user/services/userService";
 import type { PlayerDTO } from "@/feactures/user/types/PlayerDTO";
 
 import { FaBell, FaComments, FaUsers, FaPlus } from "react-icons/fa";
 
-const UserActionsPanel: React.FC = () => {
+interface Props {
+  onProfileClick?: () => void; // ✅ ahora opcional
+}
+
+const UserActionsPanel: React.FC<Props> = ({ onProfileClick }) => {
   const { user } = useUser();
-  // const { openProfileModal } = ProfileModal();
   const [player, setPlayer] = useState<PlayerDTO | null>(null);
 
   useEffect(() => {
@@ -30,7 +32,7 @@ const UserActionsPanel: React.FC = () => {
       {/* Avatar + nombre del usuario */}
       <div
         className="flex flex-col items-center cursor-pointer"
-        //onClick={openProfileModal}
+        onClick={() => onProfileClick?.()} // ✅ solo si se define
       >
         <img
           src={player?.profilePicture || "/assets/avatars/avatar1.png"}
@@ -52,3 +54,6 @@ const UserActionsPanel: React.FC = () => {
 };
 
 export default UserActionsPanel;
+
+
+
