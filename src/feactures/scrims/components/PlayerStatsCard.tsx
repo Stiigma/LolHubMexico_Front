@@ -39,7 +39,7 @@ const PlayerStatsCard: React.FC<PlayerStatsCardProps> = ({ player, scrimStatus }
         </div>
       </div>
 
-      {scrimStatus === 3 && (
+      {scrimStatus === 4 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1 text-sm text-gray-700 flex-1">
           <p><strong>Nivel:</strong> {player.nivel}</p>
           <p><strong>KDA:</strong> {player.kills}/{player.deaths}/{player.assists}</p>
