@@ -115,7 +115,7 @@ export default function TeamDetail() {
       </section>
 
       {/* Historial de Partidas */}
-      <section className="mt-10 px-19 max-w-6xl mx-auto">
+      <section className="mt-16 px-4 max-w-5xl mx-auto">
         <h2 className="text-2xl font-semibold text-white mb-6">
           Historial de Partidas
         </h2>

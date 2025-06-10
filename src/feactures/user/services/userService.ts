@@ -3,7 +3,7 @@ import { API_URL } from "@/core/utils/API_URL";
 import type { UserDTO } from "@/shared/types/User/UserDTO";
 
 export const getUserById = async (idUser: number) => {
-  const response = await axios.get(`${API_URL}/api/Users/by-id`, {
+  const response = await axios.get(`${API_URL}/api/Users/by-id/`, {
     params: { idUser },
   });
   console.log(response.data.UserDTO)

@@ -1,14 +1,19 @@
-// src/features/players/pages/PlayerDetail.tsx
+// src/feactures/teams/pages/PlayerDetail.tsx
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-// Ajusta la ruta a tu userService.ts
-import {
-  getUserById,
-  getPlayerById,
-} from "@/feactures/user/services/userService";
-// Importa tus DTOs existentes
-import type { PlayerDTO } from "@/feactures/user/types/PlayerDTO";
-import type { UserDTO } from "@/shared/types/User/UserDTO"; // Asegúrate de que esta ruta sea correcta para tu UserDTO
+
+// AJUSTE #1: Ruta para userService.ts
+// Desde 'feactures/teams/pages/' para llegar a 'feactures/user/services/'
+// Se necesita subir dos niveles (..) y luego bajar a 'user/services'
+import { getUserById, getPlayerById } from "../../user/services/userService"; // <--- CORRECCIÓN AQUÍ
+
+// AJUSTE #2: Ruta para PlayerDTO.ts
+// Desde 'feactures/teams/pages/' para llegar a 'feactures/user/types/'
+// Se necesita subir dos niveles (..) y luego bajar a 'user/types'
+import type { PlayerDTO } from "../../user/types/PlayerDTO"; // <--- CORRECCIÓN AQUÍ
+
+// La ruta para UserDTO es correcta si tu configuración de TypeScript tiene el alias "@/shared"
+import type { UserDTO } from "@/shared/types/User/UserDTO";
 
 // Interfaz para la información combinada que mostraremos en el frontend
 interface PlayerCombinedDetail {
@@ -22,12 +27,11 @@ interface PlayerCombinedDetail {
   idPlayer?: number; // Del PlayerDTO
   puuid?: string; // Del PlayerDTO
   // Puedes añadir más campos aquí si UserDTO o PlayerDTO los contienen y quieres mostrarlos
-  // Por ejemplo, si UserDTO tiene 'fullName' o PlayerDTO tiene 'rank'
 }
 
 const PlayerDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Obtener el ID del usuario de la URL
-  const userId = Number(id); // Convertir a número
+  const { id } = useParams<{ id: string }>();
+  const userId = Number(id);
 
   const [playerCombinedDetail, setPlayerCombinedDetail] =
     useState<PlayerCombinedDetail | null>(null);
@@ -35,21 +39,25 @@ const PlayerDetail: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!userId) {
-      setError("ID de usuario no proporcionado.");
+    if (!userId || isNaN(userId)) {
+      setError("ID de usuario no proporcionado o no válido.");
       setLoading(false);
       return;
     }
 
     const fetchPlayerFullDetails = async () => {
       try {
-        // 1. Obtener la información del usuario (contiene userName y email)
+        // Añadimos logs para depuración justo antes de la llamada a la API
+        console.log(`Intentando obtener UserDTO para idUser: ${userId}`);
         const userResponse = await getUserById(userId);
-        // Asume que la respuesta es { UserDTO: ... } y extrae el UserDTO
-        const user: UserDTO = userResponse.UserDTO;
+        const user: UserDTO = userResponse?.UserDTO; // Optional chaining para seguridad
 
-        // 2. Obtener la información específica del jugador de LoL (PlayerDTO)
+        console.log(`Intentando obtener PlayerDTO para idUser: ${userId}`);
         const player: PlayerDTO = await getPlayerById(userId);
+
+        // Debugging logs de los datos obtenidos
+        console.log("Datos de Usuario obtenidos:", user);
+        console.log("Datos de Jugador obtenidos:", player);
 
         if (user && player) {
           setPlayerCombinedDetail({
@@ -64,18 +72,25 @@ const PlayerDetail: React.FC = () => {
             puuid: player.puuid,
           });
         } else {
+          // Si alguno de los DTOs es null o undefined, se muestra este error.
+          // Es crucial verificar la respuesta de la API en la pestaña 'Network'.
           setError("No se encontraron todos los detalles para este jugador.");
         }
-      } catch (e) {
-        console.error("Error fetching player details:", e);
-        setError("Error al cargar los detalles del jugador.");
+      } catch (e: any) {
+        // Captura cualquier error de red o de la API
+        console.error("Error al cargar los detalles del jugador:", e);
+        setError(
+          `Error al cargar los detalles del jugador: ${
+            e.message || "Error desconocido"
+          }`
+        );
       } finally {
         setLoading(false);
       }
     };
 
     fetchPlayerFullDetails();
-  }, [userId]); // Las dependencias deben incluir userId para re-fetch si el ID cambia
+  }, [userId]);
 
   if (loading)
     return (
@@ -92,13 +107,11 @@ const PlayerDetail: React.FC = () => {
       </div>
     );
 
-  // Renderiza la información del jugador con la estética que manejamos
+  // Renderiza la información del jugador
   return (
     <div className="min-h-screen bg-gray-900 text-white p-8">
-      {/* Sección superior y banner (similar a TeamDetail) */}
       <header
         className="relative h-64 bg-center bg-cover rounded-xl shadow-lg"
-        // Asegúrate de tener esta imagen en tus assets o usa un placeholder
         style={{
           backgroundImage: 'url("/assets/player-banner-placeholder.png")',
         }}
@@ -125,7 +138,6 @@ const PlayerDetail: React.FC = () => {
         </div>
       </header>
 
-      {/* Sección de detalles generales del jugador */}
       <section className="mt-12 max-w-4xl mx-auto bg-slate-800 rounded-2xl shadow-xl p-8">
         <h2 className="text-3xl font-bold text-violet-400 mb-6 border-b border-violet-600 pb-3">
           Información General
@@ -151,38 +163,8 @@ const PlayerDetail: React.FC = () => {
             <span className="font-semibold text-white">PUUID:</span>{" "}
             {playerCombinedDetail.puuid || "N/A"}
           </p>
-          {/* Puedes añadir más campos aquí si UserDTO o PlayerDTO los contienen y quieres mostrarlos */}
         </div>
       </section>
-
-      {/* Sección para el historial de partidas (PlayerStats) - Comentada por ahora */}
-      {/*
-        Para mostrar un historial de PlayerStats (estadísticas por partida):
-        1. Tu backend necesitaría un endpoint que devuelva una LISTA de PlayerStats para un idUser.
-        2. Harías una llamada a ese endpoint en este useEffect (similar a getUserById y getPlayerById).
-        3. Luego, mapearías esas PlayerStats en componentes visuales (quizás tarjetas de partida,
-           pero más sencillas que las de MatchHistory ya que solo son estadísticas del jugador).
-        Dejaré esta sección comentada ya que aún no tenemos el endpoint ni la estructura para esto.
-      */}
-      {/*
-      <section className="mt-12 max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold text-violet-400 mb-6 border-b border-violet-600 pb-3">
-          Historial de Scrims Recientes
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          { // playerStatsList.map((stat, index) => (
-            // <div key={index} className="bg-slate-800 rounded-lg p-4 shadow-md text-gray-300">
-            //   <h3 className="text-xl font-semibold text-white">{stat.championName}</h3>
-            //   <p>Carril: {stat.carril}</p>
-            //   <p>KDA: {stat.kills}/{stat.deaths}/{stat.assists}</p>
-            //   <p>Oro: {stat.goldEarned}</p>
-            //   // ... más detalles de PlayerStats
-            // </div>
-          // ))
-          }
-        </div>
-      </section>
-      */}
     </div>
   );
 };

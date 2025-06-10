@@ -1,14 +1,15 @@
-// components/MatchCard.tsx (o scrims/components/ScrimCard.tsx si prefieres mantener la estructura)
+// src/features/teams/components/ScrimCard.tsx
 import React from "react";
-import type { ScrimDetail } from "@/feactures/scrims/types/ScrimDetail"; // Asegúrate de que la ruta sea correcta
+import { Link } from "react-router-dom";
+import type { ScrimDetail } from "@/feactures/scrims/types/ScrimDetail";
 
-interface MatchCardProps {
-  scrim: ScrimDetail; // Recibe un objeto ScrimDetail completo
+interface ScrimCardProps {
+  scrim: ScrimDetail;
   engageIconUrl: string;
   pickIconUrl: string;
 }
 
-const MatchCard: React.FC<MatchCardProps> = ({
+const ScrimCard: React.FC<ScrimCardProps> = ({
   scrim,
   engageIconUrl,
   pickIconUrl,
@@ -17,146 +18,69 @@ const MatchCard: React.FC<MatchCardProps> = ({
   const enemies = scrim.team2Players.map((player) => player.championName);
 
   return (
-    // Contenedor principal de la tarjeta de partida
-    <div
+    <Link
+      key={scrim.scrim.idScrim}
+      to={`/scrims/${scrim.scrim.idScrim}`}
       className="
-      relative overflow-hidden
-      bg-gradient-to-br from-slate-900 to-slate-800 
-      rounded-2xl 
-      shadow-lg hover:shadow-xl 
-      p-3 // Padding de la tarjeta principal
-      flex flex-col // Cambiado a columna para el contenido interno
-      space-y-4 // Espacio vertical entre los elementos internos (campeones, separador)
-      transition-all duration-300 transform 
-      hover:-translate-y-2 hover:scale-102
-      border border-transparent hover:border-violet-700
-      group
-      mb-6 // Margen inferior para separar las tarjetas de partida
-    "
-    >
-      {/* Elemento de brillo sutil en el fondo al pasar el ratón */}
-      <div
-        className="
-        absolute inset-0 
-        bg-gradient-to-br from-violet-900 via-transparent to-transparent 
-        opacity-0 group-hover:opacity-10 
-        transition-opacity duration-500 
-        pointer-events-none
+        group
+        block
+        w-full max-w-5xl           // Mantenemos el ancho que ya te funciona
+        h-27
+        bg-gray-800/30
+        rounded-2xl
+        shadow-lg
+        hover:shadow-xl
+        hover:shadow-violet-500/50
+        transition-shadow
+        duration-200
+        p-3                        // Mantenemos el padding p-3
+        flex items-center justify-between
+        flex-wrap
+        cursor-pointer
       "
-      ></div>
+    >
+      {/* Campeones aliados */}
+      <div className="flex space-x-5 flex-grow-0 flex-shrink- mb-2 sm:mb-0">
+        {allies.map((champ) => (
+          <img
+            key={champ}
+            src={`https://ddragon.leagueoflegends.com/cdn/14.10.1/img/champion/${champ}.png`}
+            alt={champ}
+            className="w-14 h-14 border-2 border-blue-500 object-cover transition-transform duration-200 hover:-translate-y-2" // <--- CAMBIO: w-14 h-14 y se quitó rounded-full
+          />
+        ))}
+      </div>
 
-      {/* Fila de campeones y separador */}
-      <div className="flex flex-nowrap items-center justify-center space-x-3 overflow-x-auto py-2 px-2 md:px-0">
-        {/* Campeones aliados */}
-        <div className="flex space-x-2">
-          {allies.map((champ) => (
-            <div
-              key={champ}
-              className="
-                relative overflow-hidden
-                bg-gradient-to-br from-purple-900/40 to-purple-800/30
-                rounded-xl 
-                shadow-lg hover:shadow-xl 
-                p-1 
-                flex-shrink-0 
-                transition-all duration-300 transform 
-                hover:-translate-y-1 hover:scale-105 
-                border border-transparent hover:border-violet-700
-                group cursor-pointer
-              "
-            >
-              <div
-                className="
-                absolute inset-0 
-                bg-gradient-to-br from-violet-900 via-transparent to-transparent 
-                opacity-0 group-hover:opacity-10 
-                transition-opacity duration-500 
-                pointer-events-none
-              "
-              ></div>
-              <img
-                src={`https://ddragon.leagueoflegends.com/cdn/14.10.1/img/champion/${champ}.png`}
-                alt={champ}
-                className="
-                  w-16 h-16 
-                  rounded-xl 
-                  object-cover
-                  ring-2 ring-transparent group-hover:ring-violet-500 
-                  transition-all duration-300
-                  shadow-md
-                "
-              />
-            </div>
-          ))}
+      {/* Separador central */}
+      <div className="flex flex-col items-center text-white space-y-2 mx-2 flex-shrink-0">
+        <div className="flex space-x-3">
+          <span className="px-3 py-1 text-xs font-semibold rounded-full border border-blue-500 text-blue-500">
+            Ally
+          </span>
+          <span className="px-3 py-1 text-xs font-semibold rounded-full border border-red-500 text-red-500">
+            Enemy
+          </span>
         </div>
-
-        {/* Separador central */}
-        <div className="flex flex-col items-center text-white space-y-3 mx-2 flex-shrink-0">
-          <div className="flex space-x-3">
-            <span className="px-2 py-0.5 text-xs font-semibold rounded-full border border-blue-500 text-blue-500">
-              Ally
-            </span>
-            <span className="px-2 py-0.5 text-xs font-semibold rounded-full border border-red-500 text-red-500">
-              Enemy
-            </span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <img src={engageIconUrl} alt="Engage" className="w-8 h-8" />
-            <span className="text-white text-xl font-bold">×</span>
-            <img src={pickIconUrl} alt="Pick" className="w-8 h-8" />
-          </div>
-        </div>
-
-        {/* Campeones enemigos */}
-        <div className="flex space-x-2">
-          {enemies.map((champ) => (
-            <div
-              key={champ}
-              className="
-                relative overflow-hidden
-                bg-gradient-to-br from-red-900/40 to-red-800/30 
-                rounded-xl 
-                shadow-lg hover:shadow-xl 
-                p-1 
-                flex-shrink-0
-                transition-all duration-300 transform 
-                hover:-translate-y-1 hover:scale-105
-                border border-transparent hover:border-red-700 
-                group cursor-pointer
-              "
-            >
-              <div
-                className="
-                absolute inset-0 
-                bg-gradient-to-br from-red-900 via-transparent to-transparent 
-                opacity-0 group-hover:opacity-10 
-                transition-opacity duration-500 
-                pointer-events-none
-              "
-              ></div>
-              <img
-                src={`https://ddragon.leagueoflegends.com/cdn/14.10.1/img/champion/${champ}.png`}
-                alt={champ}
-                className="
-                  w-16 h-16 
-                  rounded-xl 
-                  object-cover
-                  ring-2 ring-transparent group-hover:ring-red-500 
-                  transition-all duration-300
-                  shadow-md
-                "
-              />
-            </div>
-          ))}
+        <div className="flex items-center space-x-2">
+          <img src={engageIconUrl} alt="Engage" className="w-10 h-10" />
+          <span className="text-white text-2xl font-bold">×</span>
+          <img src={pickIconUrl} alt="Pick" className="w-10 h-10" />
         </div>
       </div>
-      {/* Puedes añadir más detalles de la partida aquí si los tienes en ScrimDetail, por ejemplo: */}
-      {/* <div className="text-gray-400 text-sm mt-4 text-center">
-        <p>Fecha: {new Date(scrim.scrim.date).toLocaleDateString()}</p>
-        <p>Resultado: {scrim.scrim.result}</p>
-      </div> */}
-    </div>
+
+      {/* Campeones enemigos */}
+      <div className="flex space-x-5 flex-grow-0 flex-shrink-0 mb-2 sm:mb-0">
+        {enemies.map((champ) => (
+          <img
+            key={champ}
+            src={`https://ddragon.leagueoflegends.com/cdn/14.10.1/img/champion/${champ}.png`}
+            alt={champ}
+            className="w-14 h-14 border-2 border-blue-500 object-cover transition-transform duration-200 hover:-translate-y-2" // <--- CAMBIO: w-14 h-14 y se quitó rounded-full
+          />
+        ))}
+      </div>
+    </Link>
   );
 };
 
-export default MatchCard;
+export default ScrimCard;

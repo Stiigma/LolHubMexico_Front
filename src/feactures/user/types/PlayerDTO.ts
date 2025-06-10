@@ -1,4 +1,3 @@
-// src/features/players/types/PlayerDTO.ts
 
 export interface PlayerDTO {
   idPlayer: number;

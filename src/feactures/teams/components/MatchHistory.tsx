@@ -1,12 +1,13 @@
-// components/MatchHistory.tsx
+// src/features/teams/components/MatchHistory.tsx
 import React from "react";
-import MatchCard from "./ScrimCard"; // Importa el nuevo componente
-import type { ScrimDetail } from "@/feactures/scrims/types/ScrimDetail"; // Asegúrate de la ruta
+// Ya no necesitamos Link, useState, useEffect, getScrimDetailFull aquí.
+import type { ScrimDetail } from "@/feactures/scrims/types/ScrimDetail";
+import ScrimCard from "./ScrimCard"; // <-- Importa el nuevo ScrimCard
 
 interface MatchHistoryProps {
-  scrims: ScrimDetail[]; // Ahora recibe una lista de scrims
-  engageIconUrl: string;
-  pickIconUrl: string;
+  scrims: ScrimDetail[]; // Recibe la lista completa de ScrimDetail
+  engageIconUrl: string; // <-- Ahora estas props son obligatorias
+  pickIconUrl: string; // <-- Ahora estas props son obligatorias
 }
 
 const MatchHistory: React.FC<MatchHistoryProps> = ({
@@ -14,23 +15,30 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({
   engageIconUrl,
   pickIconUrl,
 }) => {
-  return (
-    // La section principal ahora contendrá una lista de MatchCards
-    <section className="mt-16 px-4 items-center">
-      {/* Ya no hay un h2 de título aquí, se movería al componente padre */}
-      <div className="flex flex-col items-center space-y-6">
-        {" "}
-        {/* Espacio vertical entre cada tarjeta de partida */}
-        {scrims.map((scrim) => (
-          <MatchCard
-            key={scrim.scrim.idScrim} // Asegúrate de tener un ID único para cada scrim
-            scrim={scrim}
-            engageIconUrl={engageIconUrl}
-            pickIconUrl={pickIconUrl}
-          />
-        ))}
+  if (!scrims || scrims.length === 0) {
+    return (
+      <div className="text-gray-400 p-4 text-center">
+        No hay scrims recientes para este equipo.
       </div>
-    </section>
+    );
+  }
+
+  return (
+    // La section principal ahora contendrá una lista de ScrimCard
+    // Quitamos el mt-16 px-4 y items-center de aquí, ya que los pondremos en TeamDetail
+    // Opcional: si quieres un espaciado consistente, puedes mantener el 'space-y-6'
+    <div className="flex flex-col items-center space-y-6">
+      {" "}
+      {/* Mantén el espacio vertical entre tarjetas */}
+      {scrims.map((scrim) => (
+        <ScrimCard
+          key={scrim.scrim.idScrim} // Asegúrate de tener un ID único para cada scrim
+          scrim={scrim}
+          engageIconUrl={engageIconUrl}
+          pickIconUrl={pickIconUrl}
+        />
+      ))}
+    </div>
   );
 };
 
