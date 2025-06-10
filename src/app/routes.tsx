@@ -17,7 +17,7 @@ import BrowserPage from "../feactures/teams/pages/BrowserPage";
 import MyTeamPage from "../feactures/teams/pages/MyTeamPage";
 import InvitationTeamPage from "../feactures/teams/pages/InvitationTeamPage";
 import TeamDetail from "../feactures/teams/pages/TeamDetail";
-import PlayerDetail from "../feactures/teams/pages/PlayerDetail"; // <--- Tu PlayerDetail
+import PlayerDetail from "../feactures/teams/pages/PlayerDetail";
 
 // Torneos
 import TournamentLayout from "../feactures/tournaments/layout/TournamentLayout";
@@ -55,40 +55,34 @@ const AppRoutes = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        {/* Dashboard (directamente bajo PrivateRoute) */}
-        <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute>
-              <DashboardPage />
-            </PrivateRoute>
-          }
-        />
-        {/* Rutas que usan MainLayout (perfil, equipos, torneos, scrims) */}
+
+        {/*
+          Rutas que usan MainLayout (incluyendo el Dashboard, perfil, equipos, torneos, scrims)
+          Ahora el Dashboard estará envuelto por MainLayout, lo que permitirá que el Sidebar
+          y UserActionsPanel se muestren si MainLayout los renderiza.
+        */}
         <Route
           element={
-            // Este Route envolverá todas las secciones principales
             <PrivateRoute>
               <MainLayout />
             </PrivateRoute>
           }
         >
+          {/* Dashboard */}
+          <Route path="/dashboard" element={<DashboardPage />} /> {/* <-- MOVIDO AQUÍ */}
+
           {/* Rutas de Perfil */}
           <Route path="/profile" element={<ViewProfilePage />} />
           <Route path="/profile/edit" element={<EditProfilePage />} />
 
           {/* Rutas de Equipos */}
           <Route path="/teams" element={<TeamsLayout />}>
-            {" "}
-            {/* TeamsLayout es el padre de estas sub-rutas de equipo */}
-            <Route index element={<Navigate to="preview" replace />} />{" "}
-            {/* Redirige /teams a /teams/preview */}
+            <Route index element={<Navigate to="preview" replace />} />
             <Route path="preview" element={<PreviewPage />} />
             <Route path="browser" element={<BrowserPage />} />
             <Route path="my-team" element={<MyTeamPage />} />
             <Route path="invitation-team" element={<InvitationTeamPage />} />
-            <Route path=":id" element={<TeamDetail />} />{" "}
-            {/* /teams/:id para detalle de equipo */}
+            <Route path=":id" element={<TeamDetail />} />
           </Route>
 
           {/* RUTA PARA EL DETALLE DEL JUGADOR - FUERA DEL TeamsLayout anidado con :id */}
@@ -135,11 +129,10 @@ const AppRoutes = () => {
           />
           <Route path="/scrims/:id/edit" element={<EditScrimPage />} />
           <Route path="/scrims/:id" element={<ScrimDetailPage />} />
-        </Route>{" "}
-        {/* Cierre del MainLayout */}
+        </Route> {/* Cierre del MainLayout */}
+
         {/* Ruta catch-all para 404 (opcional) */}
-        <Route path="*" element={<Navigate to="/" replace />} />{" "}
-        {/* O una página 404 dedicada */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </ProfileModalProvider>
   );
