@@ -1,5 +1,6 @@
 export interface PlayerStats {
   userName: string;
+  idUser: number;
   summonerName: string;
   profilePicture: string;
   championName: string;

@@ -9,6 +9,8 @@ import type { ScrimDetail } from "../types/ScrimDetail";
 import type { RivalDTO } from "../types/RivalDTO";
 import type { CreateScrimDTO } from "../types/CreateScrimDTO";
 import type { MatchDetail } from "../types/MatchDetail";
+import type { ScrimLog } from "../types/ScrimLog";
+import type { GeminiAnalysis } from "../types/gemini-analysis";
 
 
 export const getScrimPending = async () => {
@@ -43,6 +45,46 @@ export const isMyScrim = async (idScrim: number, idteam: number): Promise<boolea
   }
   
 
+};
+
+export interface ScrimLogWithAnalysis {
+  idLogScrim: number;
+  matchId: string;
+  logDate: string;
+  geminiAnalysis: GeminiAnalysis | null; // This will hold the parsed object, or null if no analysis
+}
+export const getScrimLogById = async (idScrim: number): Promise<ScrimLogWithAnalysis | null> => {
+  try {
+    // Specify the expected type of the response.data using RawScrimLogFromApi
+    const response = await axios.get(`${API_URL}/scrim/log/${idScrim}`);
+
+    // Initialize geminiAnalysis to null
+    let parsedGeminiAnalysis: GeminiAnalysis | null = null;
+
+    // Check if geminiAnalysisJson exists and is a non-empty string
+    if (response.data.geminiAnalysisJson) {
+      try {
+        parsedGeminiAnalysis = JSON.parse(response.data.geminiAnalysisJson) as GeminiAnalysis;
+      } catch (parseError) {
+        console.error("❌ Error parsing geminiAnalysisJson:", parseError);
+        // Handle parsing error, maybe set parsedGeminiAnalysis to null or throw
+      }
+    }
+
+    // Construct the scrimLogWithAnalysis object with the correct properties
+    const scrimLogWithAnalysis: ScrimLogWithAnalysis = {
+      idLogScrim: response.data.idLogScrim, // Use the correct property name: idLogScrim
+      matchId: response.data.matchId,
+      logDate: response.data.logDate,
+      geminiAnalysis: parsedGeminiAnalysis, // Assign the parsed object (or null)
+    };
+
+    return scrimLogWithAnalysis;
+
+  } catch (error) {
+    console.error("❌ Error al obtener el ScrimLog:", error);
+    return null;
+  }
 };
 
 export const getScrimEnriched = async (scrim: ScrimPDTO): Promise<ScrimEnriched | null> => {
@@ -144,7 +186,7 @@ export const getScrimDetailFull = async (idScrim: number): Promise<ScrimDetail |
         ]);
         
         return {
-          ...stat,
+          ...stat,        
           userName: user?.userName || "Desconocido",
           summonerName: player?.summonerName || "?",
           profilePicture: player?.profilePicture || "/default-avatar.png",
