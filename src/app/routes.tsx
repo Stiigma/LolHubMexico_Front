@@ -26,7 +26,7 @@ import InvitationsPageTournaments from "../feactures/tournaments/pages/Invitatio
 import CreateTournamentPage from "../feactures/tournaments/pages/CreateTournamentPage";
 import TournamentDetailPage from "../feactures/tournaments/pages/TournamentDetailPage";
 import EditTournamentPage from "../feactures/tournaments/pages/EditTournamentPage";
-import TournamentBracketPage from "../feactures/tournaments/pages/TournamentBracketPage"; // ✅ NUEVA RUTA
+import TournamentBracketPage from "../feactures/tournaments/pages/TournamentBracketPage";
 
 // Scrims
 import ScrimsLayout from "../feactures/scrims/layout/ScrimsLayout";
@@ -51,15 +51,17 @@ const AppRoutes = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
-      {/* Dashboard */}
+      {/* Dashboard bajo MainLayout */}
       <Route
         path="/dashboard"
         element={
           <PrivateRoute>
-            <DashboardPage />
+            <MainLayout />
           </PrivateRoute>
         }
-      />
+      >
+        <Route index element={<DashboardPage />} />
+      </Route>
 
       {/* Perfil bajo MainLayout */}
       <Route
@@ -110,7 +112,7 @@ const AppRoutes = () => {
         <Route path="create" element={<CreateTournamentPage />} />
         <Route path=":id" element={<TournamentDetailPage />} />
         <Route path=":id/edit" element={<EditTournamentPage />} />
-        <Route path=":id/bracket" element={<TournamentBracketPage />} /> {/* ✅ NUEVA RUTA */}
+        <Route path=":id/bracket" element={<TournamentBracketPage />} />
       </Route>
 
       {/* Scrims bajo MainLayout */}

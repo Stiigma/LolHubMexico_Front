@@ -20,7 +20,14 @@ const Sidebar = () => {
   const [showModal, setShowModal] = useState(false);
   const { user } = useUser();
   console.log(user)
-  if (!user) return null;
+  if (!user) {
+  return (
+    <div className="w-64 bg-[#0d1b2a] text-white px-6 py-8 flex items-center justify-center min-h-screen">
+      <span className="text-sm text-gray-400">Cargando...</span>
+    </div>
+  );
+  }
+
 
   const userId = user.idUser;
 
