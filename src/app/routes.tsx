@@ -17,6 +17,7 @@ import BrowserPage from "../feactures/teams/pages/BrowserPage";
 import MyTeamPage from "../feactures/teams/pages/MyTeamPage";
 import InvitationTeamPage from "../feactures/teams/pages/InvitationTeamPage";
 import TeamDetail from "../feactures/teams/pages/TeamDetail";
+import PlayerDetail from "../feactures/teams/pages/PlayerDetail";
 
 // Torneos
 import TournamentLayout from "../feactures/tournaments/layout/TournamentLayout";
@@ -55,17 +56,15 @@ const AppRoutes = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
-        {/* Dashboard bajo MainLayout */}
+        {/* Dashboard */}
         <Route
           path="/dashboard"
           element={
             <PrivateRoute>
-              <MainLayout />
+              <DashboardPage />
             </PrivateRoute>
           }
-        >
-          <Route index element={<DashboardPage />} />
-        </Route>
+        />
 
         {/* Perfil bajo MainLayout */}
         <Route
@@ -78,6 +77,42 @@ const AppRoutes = () => {
         >
           <Route index element={<ViewProfilePage />} />
           <Route path="edit" element={<EditProfilePage />} />
+        </Route>
+
+        {/* Equipos bajo MainLayout */}
+        <Route
+          path="/teams"
+          element={
+            <PrivateRoute>
+              <MainLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route element={<TeamsLayout />}>
+            <Route path="preview" element={<PreviewPage />} />
+            <Route path="browser" element={<BrowserPage />} />
+            <Route path="my-team" element={<MyTeamPage />} />
+            <Route path="invitation-team" element={<InvitationTeamPage />} />
+            <Route path=":id" element={<TeamDetail />} />
+            <Route path=":id" element={<PlayerDetail />} />
+          </Route>
+          {/* Perfil bajo MainLayout */}
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <MainLayout />
+              </PrivateRoute>
+            }
+          >
+            <Route index element={<ViewProfilePage />} />
+            <Route path="edit" element={<EditProfilePage />} />
+          </Route>
+          <Route path="create" element={<CreateTournamentPage />} />
+          <Route path=":id" element={<TournamentDetailPage />} />
+          <Route path=":id/edit" element={<EditTournamentPage />} />
+          <Route path=":id/bracket" element={<TournamentBracketPage />} />{" "}
+          {/* ✅ NUEVA RUTA */}
         </Route>
 
         {/* Equipos bajo MainLayout */}
@@ -111,7 +146,10 @@ const AppRoutes = () => {
             <Route index element={<Navigate to="preview" replace />} />
             <Route path="preview" element={<TournamentsPreviewPage />} />
             <Route path="my" element={<MyTournamentsPage />} />
-            <Route path="invitations" element={<InvitationsPageTournaments />} />
+            <Route
+              path="invitations"
+              element={<InvitationsPageTournaments />}
+            />
           </Route>
           <Route path="create" element={<CreateTournamentPage />} />
           <Route path=":id" element={<TournamentDetailPage />} />
@@ -143,11 +181,3 @@ const AppRoutes = () => {
 };
 
 export default AppRoutes;
-
-
-
-
-
-
-
-
