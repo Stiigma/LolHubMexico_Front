@@ -39,7 +39,7 @@ const ScrimPreviewTeams: React.FC<ScrimPreviewTeamsProps> = ({ scrim, onClick })
   return (
   <div
     className={`bg-gray-800 p-4 rounded-lg shadow-md flex justify-between items-start text-white transition ${
-      onClick ? "hover:bg-gray-700 cursor-pointer" : ""
+      onClick && (scrim.scrimPDTO?.status === 3 || scrim.scrimPDTO?.status === 4) ? "hover:bg-gray-700 cursor-pointer" : ""
     }`}
     onClick={onClick}
   >
@@ -56,12 +56,27 @@ const ScrimPreviewTeams: React.FC<ScrimPreviewTeamsProps> = ({ scrim, onClick })
               ? "text-yellow-400"
               : scrim.scrimPDTO.status === 1
               ? "text-blue-400"
+              : scrim.scrimPDTO.status === 4
+              ? "text-purple-400"
               : "text-green-400"
           }
         >
           {scrim.statusString}
         </span>
       </p>
+
+      {scrim.scrimPDTO.status === 4 && (
+      <div className="mt-4 text-sm text-gray-300">
+        <p>Scrim completada. Información adicional</p>
+        <ul className="list-disc list-inside ml-2">
+          {/* <li>Ganador: {scrim.winnerTeamName || "Por definir"}</li>
+          <li>Duración: {scrim.matchDuration || "N/A"}</li>
+          <li>Score final: {scrim.matchScore || "N/A"}</li> */}
+          {/* Puedes seguir agregando más datos como stats generales */}
+        </ul>
+      </div>
+    )}
+
 
       <div className="mt-2">
         <p className="text-sm font-medium">Equipo 1: {scrim.teamName1}</p>
@@ -72,6 +87,8 @@ const ScrimPreviewTeams: React.FC<ScrimPreviewTeamsProps> = ({ scrim, onClick })
             : scrim.teamName2}
         </p>
       </div>
+
+      
 
       {scrim.scrimPDTO.status === 0 && (
         <p className="text-yellow-300 text-sm mt-2">
