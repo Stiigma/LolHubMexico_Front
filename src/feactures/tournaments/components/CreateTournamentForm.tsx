@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
+import type { Tournament } from "../types/Tournament";
+import { createTorneo } from "../services/tournamentService";
+import { useUser } from "@/context/UserContext";
 interface Props {
   onSuccess: () => void;
 }
@@ -12,31 +14,36 @@ const CreateTournamentForm: React.FC<Props> = ({ onSuccess }) => {
   const [description, setDescription] = useState("");
   const [maxTeams, setMaxTeams] = useState(8);
   const [format, setFormat] = useState("Eliminación directa");
-
+  const user = useUser().user;
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const tournamentData = {
-      name,
-      date,
-      description,
-      maxTeams,
-      format,
+    if(!user) return
+    if(user.role === 0){
+      
+    }
+    const torneoData: Tournament = {
+      nombre: name,
+      descripcion: description,
+      fechaInicio: new Date(date).toISOString(),
+      fechaFin: new Date(new Date(date).getTime() + 24 * 60 * 60 * 1000).toISOString(), // 7 días después
+      idCreador: user.idUser // Ajusta según tu lógica de usuario
     };
 
-    console.log("Torneo enviado:", tournamentData);
+    const exito = await createTorneo(torneoData);
 
-    toast.success("¡Torneo creado exitosamente!");
+    if (exito) {
+      toast.success("¡Torneo creado exitosamente!");
 
-    // Redirige y cierra el modal después de 2.5 segundos
-    setTimeout(() => {
-      onSuccess(); // cerrar el modal
-      navigate("/tournaments"); // navegar a la lista de torneos
-    }, 2500);
+      setTimeout(() => {
+        onSuccess(); // cerrar el modal
+        navigate("/tournaments");
+      }, 2500);
+    } else {
+      toast.error("Error al crear el torneo.");
+    }
   };
-
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Nombre */}
