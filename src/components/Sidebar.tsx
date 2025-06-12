@@ -3,12 +3,8 @@ import { useState } from 'react';
 import { useUser } from '@/context/UserContext';
 
 import {
-  FaSearch,
   FaUsers,
   FaGamepad,
-  FaChartBar,
-  FaEye,
-  FaNewspaper,
   FaCloud,
   FaHandshake, // nuevo ícono para Scrims
 } from "react-icons/fa";
@@ -43,29 +39,17 @@ const Sidebar = () => {
 
       {/* Menú */}
       <nav className="flex flex-col gap-4 text-[15px] font-medium">
-        <Link to="/search" className="flex items-center gap-3">
-          <FaSearch className="text-sky-300" /> Buscar
-        </Link>
+       
 
         <Link to="/teams/preview" className="flex items-center gap-3">
           <FaUsers className="text-purple-300" /> Buscar Equipo
         </Link>
 
-        <Link to="/play" className="flex items-center gap-3">
+        <Link to="/scrims/preview" className="flex items-center gap-3">
           <FaGamepad className="text-indigo-300" /> Jugar
         </Link>
 
-        <Link to="/ranking" className="flex items-center gap-3">
-          <FaChartBar className="text-pink-300" /> Ranking
-        </Link>
-
-        <Link to="/stats" className="flex items-center gap-3">
-          <FaEye className="text-lime-300" /> Estadísticas
-        </Link>
-
-        <Link to="/feed" className="flex items-center gap-3">
-          <FaNewspaper className="text-gray-300" /> Feed
-        </Link>
+       
 
         <hr className="my-4 border-blue-800" />
 
